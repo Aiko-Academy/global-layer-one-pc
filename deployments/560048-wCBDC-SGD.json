@@ -1,0 +1,8 @@
+{
+  "PolicyWrapper": "0x415b12CE7A7d8C128E7758D564672053eB1a49aB",
+  "block": 3637517,
+  "policyDescriptor": "0x63470be4c62e58906144409c887dfd6bd3b069f677b2bcc0122383da736ed227",
+  "policyVersion": 9,
+  "symbol": "wCBDC-SGD",
+  "underlying": "0x601409140a7c9d07010615871B3662d5a2C9b3E6"
+}

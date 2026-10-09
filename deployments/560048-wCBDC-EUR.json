@@ -1,0 +1,8 @@
+{
+  "PolicyWrapper": "0xE2025750d6677220cd90c5aB6f938F5034D2BcB2",
+  "block": 3624402,
+  "policyDescriptor": "0x4a9995cecd449f81d67cc76ec2b08342667341bee93cf54b66c56bd09816a2df",
+  "policyVersion": 9,
+  "symbol": "wCBDC-EUR",
+  "underlying": "0x0d0d295800b639907955150ea8E0d4d293c3057A"
+}

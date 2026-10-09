@@ -1,0 +1,149 @@
+{
+  "source": "Aiko Academy, GL1 Programmable Compliance toolkit",
+  "source_commit": "5b5df8d9295a77cd18f2dfd1c9c40671a3eff7ec",
+  "ecrit_le": "2026-10-09",
+  "note": "Surface d exposition redistribuable. Principe : ABI et interfaces reproductibles depuis la source par empreinte ; traceurs lus sur la chaine ; licences MIT ou GPL-3.0 seulement ; aucun artefact BUSL, LZBL ni UNLICENSED ; aucune trace d outil. ABI verifiees contre le bytecode deploye par le RUNBOOK (etape en ligne, RPC).",
+  "licences_autorisees": [
+    "MIT",
+    "GPL-3.0",
+    "data"
+  ],
+  "fichiers": {
+    "abi/AttestationValidatorPolicy.json": {
+      "sha256": "defce4fec72e1ccd925370f502314c9d5a805bfe1f2583ef99641e56d55b7349",
+      "licence": "MIT"
+    },
+    "abi/ComplianceKeyRegistry.json": {
+      "sha256": "dda5d3727d33b1775a839cba7c714b11df39f3ccdd3bc5b14b87445e069fe175",
+      "licence": "MIT"
+    },
+    "abi/CredentialRegistry.json": {
+      "sha256": "f4e7b07ebb9d5a95ef821a231dff5f0ce99606f158da97bf73d072b8ab0382ba",
+      "licence": "MIT"
+    },
+    "abi/ERC20TransferExtractor.json": {
+      "sha256": "fa99d5adf5340e0ee29708626506c06533b58a875e3ad511f5959192e9c52b66",
+      "licence": "MIT"
+    },
+    "abi/EnvelopeBindingPolicy.json": {
+      "sha256": "cbbc0711f0947fe0c6d3f8d47fa2e9bd3c5914cff45f682834f109cfe88b2e78",
+      "licence": "MIT"
+    },
+    "abi/Groth16ZkAdapter.json": {
+      "sha256": "4b1d24e2cc6c9a4de088141f74b2e4e1de9d42fea81a2cfd0e91cd3047502dc0",
+      "licence": "MIT"
+    },
+    "abi/HolderKycGroth16Verifier.json": {
+      "sha256": "b13f3db40693bb15f2b1b0c74e2d32fea497e9c26815e06837716b719d3c7609",
+      "licence": "GPL-3.0"
+    },
+    "abi/IdentityGatedPolicy.json": {
+      "sha256": "4a0ba773c1efe5cc400b59d1260f1b493fc519b4993a999178d831a8d790e16e",
+      "licence": "MIT"
+    },
+    "abi/IdentityRegistry.json": {
+      "sha256": "e7f130023d219410512c55aa99937a7d8e37f4e4e49cc4807a2c016fe8d3ae4f",
+      "licence": "MIT"
+    },
+    "abi/InstitutionSignatureVerifier.json": {
+      "sha256": "ce7859d8d5ed7d61da2dd469b3f38d948db39a03bbbfbcfd153911379108195e",
+      "licence": "MIT"
+    },
+    "abi/PolicyManager.json": {
+      "sha256": "38b5d39f1906e7eb7924c7e14409ca5a040e92e4cd66b623043b86c1a91f6093",
+      "licence": "MIT"
+    },
+    "abi/PolicyWrapper.json": {
+      "sha256": "108b9606049291460111b0ac96b997f77bb4bab0e50f22eca200e7985f29d30e",
+      "licence": "MIT"
+    },
+    "abi/RequiredChecksPolicy.json": {
+      "sha256": "649c4b082ab41fa15284bc13caa76f7d77f413e8fa0205ddfca20bc729788a24",
+      "licence": "MIT"
+    },
+    "abi/SanctionsGroth16Verifier.json": {
+      "sha256": "a0fa198ddc3a5ff8960114bbf571baa7af3b638c216ab3fac1445a6df3c86a8b",
+      "licence": "GPL-3.0"
+    },
+    "abi/TeeAttestationVerifier.json": {
+      "sha256": "f2b3f6ac0db8b240d7e8ac75a76b306de2317e6e8ff566a4b435e2c085aa7f45",
+      "licence": "MIT"
+    },
+    "abi/TeeTrustRegistry.json": {
+      "sha256": "7ad41a779a9f0c5d4222fffa4c5e715dcb947a8044c1df3520ac8be14e687454",
+      "licence": "MIT"
+    },
+    "abi/VLEICredentialDataValidator.json": {
+      "sha256": "53ed9a07645d49200dabfe17059fda405f18a90990e4576940b83f514a59c2c4",
+      "licence": "MIT"
+    },
+    "abi/ZkCheckRegistry.json": {
+      "sha256": "23d6da83c24dffd85ce7a393771620d8cf6dd8f69139647b0d29e2879282db07",
+      "licence": "MIT"
+    },
+    "interfaces/ComplianceTypes.sol": {
+      "sha256": "03c052d71f16f11dc716dc2e6c378a9a5b359202898571bc2646bd1dd186be7c",
+      "licence": "MIT"
+    },
+    "interfaces/IPolicy.sol": {
+      "sha256": "bde9e97fc3122d4f9d2b68f4fef9806eb95e0099a1f1d2c7399d794ff6ac4c30",
+      "licence": "MIT"
+    },
+    "interfaces/IPolicyManager.sol": {
+      "sha256": "263004524db8e27d18c0d3b58b4c5e7853cf07bec4d0832f3f92b557a7cafb70",
+      "licence": "MIT"
+    },
+    "interfaces/IPolicyWrapper.sol": {
+      "sha256": "84ddfb3dfaff7e79bbead3e939fff03e1ddba2d73b90395214c0a02f86e5cef6",
+      "licence": "MIT"
+    },
+    "deployments/560048-EURX-token.json": {
+      "sha256": "a94df2eb31051a6234b99312a1d629fb70b8de084a33a96325a39ecb0c329bb9",
+      "licence": "data"
+    },
+    "deployments/560048-SGDX-token.json": {
+      "sha256": "7ba169bcfff8f1765020fc608cddb2c47f7c03a4a5cef7a19d30b416cbab58a2",
+      "licence": "data"
+    },
+    "deployments/560048-trust.json": {
+      "sha256": "adbc067ee306097184fd71036eb22922c23076a0a9a3cd6feb396df6e2664d8e",
+      "licence": "data"
+    },
+    "deployments/560048-uMINT-token.json": {
+      "sha256": "5ad6e26f565d98752186a69d0b2cb554abd2aad445244e52d2230bcda323745f",
+      "licence": "data"
+    },
+    "deployments/560048-wCBDC-EUR.json": {
+      "sha256": "6301262603c60553f0b940e481a648ff470464ca27c81c6786c831f553178fec",
+      "licence": "data"
+    },
+    "deployments/560048-wCBDC-SGD.json": {
+      "sha256": "eed76af85c62afef5e24c4b301146bc3e68e3162a21be718aca6fd6d80d51d32",
+      "licence": "data"
+    },
+    "deployments/560048-wDT-SGD.json": {
+      "sha256": "55ba7a8d2eb31d59459be9c663e62c2b3dcf34795ed92b724238ef2d55f6e4e0",
+      "licence": "data"
+    },
+    "deployments/560048-wEURX.json": {
+      "sha256": "3efade8548551080fb6b2478628b715d9ae5c8d54d1fe7d286758d3ff1922fd6",
+      "licence": "data"
+    },
+    "deployments/560048-wSGDX.json": {
+      "sha256": "a583dbbbb2779d4fb7d2267656cb710824cff7d243e2a8b1f2b540d7469a8489",
+      "licence": "data"
+    },
+    "deployments/560048-wtEUTBL.json": {
+      "sha256": "6d1a209b8d7d0ed4e35f39c1f78eea38b134a8690d2da3623c7d01bbfe9f470d",
+      "licence": "data"
+    },
+    "deployments/560048-wuMINT.json": {
+      "sha256": "f3e95c90e26b70cf3dd4e457412b59cf2de46acbff539f227a0a09217516a9d0",
+      "licence": "data"
+    },
+    "deployments/560048-zk.json": {
+      "sha256": "d94090c6008e5c66ea965eaec7c24f12a9b459e7a5f9060042a7f1bd0902991a",
+      "licence": "data"
+    }
+  }
+}

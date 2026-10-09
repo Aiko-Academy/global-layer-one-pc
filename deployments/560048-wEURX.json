@@ -1,0 +1,8 @@
+{
+  "PolicyWrapper": "0x4F98d6aab2774Df734815731da13b4A5DC900A5C",
+  "block": 3634171,
+  "policyDescriptor": "0x6b83c6dd024898a3263b2f96888465ca78926b0a305ae4760a385d713d4dadfb",
+  "policyVersion": 9,
+  "symbol": "wEURX",
+  "underlying": "0x2e23b5a2A790AFF1d7431f7426C9FEEd9463519f"
+}

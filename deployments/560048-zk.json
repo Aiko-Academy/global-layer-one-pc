@@ -1,0 +1,7 @@
+{
+  "HolderKycAdapter": "0x7e45Ed801C3d6c3aB7c2dD170d5ba2cF97A9e622",
+  "HolderKycGroth16Verifier": "0xbc574E79A67712e1cc27860e34e07db7D2A49b84",
+  "SanctionsAdapter": "0x1521e343a9A1B9cdeC4A5a4fA8A2c25c428F708c",
+  "SanctionsGroth16Verifier": "0x35e863Abf147CfEbF7419747b2ad17FBe4E8000a",
+  "block": 3624226
+}

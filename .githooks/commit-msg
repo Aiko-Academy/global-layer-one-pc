@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Zero trace d'outil dans un message de commit de la surface d'exposition (lue par Chainlink,
+# GLEIF, LayerZero). Refuse une mention d'assistant, un co-auteur machine, un cadratin (couche 0).
+# Activation une fois par clone : git config core.hooksPath .githooks
+set -euo pipefail
+msg="$(cat "$1")"
+fail=0
+dire() { printf 'commit-msg REFUSE: %s\n' "$1" >&2; fail=1; }
+# Aiguilles par fragments : ce hook ne porte pas les litteraux qu'il traque.
+for t in "Co-""Authored-""By" "Clau""de" "Anthro""pic" "Generated ""with" "Cop""ilot"; do
+  printf '%s' "$msg" | grep -qi "$t" && dire "trace d'outil interdite: $t"
+done
+# Cadratin (U+2014) par ses octets UTF-8, pour ne pas ecrire le caractere ici.
+printf '%s' "$msg" | grep -q $'\xe2\x80\x94' && dire "cadratin interdit (mettre la ponctuation que la phrase demande)"
+[ "$fail" = 1 ] && exit 1
+exit 0

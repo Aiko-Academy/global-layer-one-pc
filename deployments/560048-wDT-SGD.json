@@ -1,0 +1,8 @@
+{
+  "PolicyWrapper": "0x6F88992735e2E1F6dc4ACAf3B6175036dcb79889",
+  "block": 3623661,
+  "policyDescriptor": "0x4b239ac05e5f93490c434725204575fe5248a834bdd4dfdac253379d91c2ac5d",
+  "policyVersion": 9,
+  "symbol": "wDT-SGD",
+  "underlying": "0xd90f5027A0ae1e249BcdE6884CAF03cCa0f8E51A"
+}

@@ -1,0 +1,8 @@
+{
+  "PolicyWrapper": "0x4079a7972b1E0CB87f42C66f1d0e9C4a3ad66BaA",
+  "block": 3634179,
+  "policyDescriptor": "0xcfe048b07ae87d511bda3c629daf0bb6c3a8e1d3ad4e0ed6d0aca7d3c9ed73a4",
+  "policyVersion": 9,
+  "symbol": "wSGDX",
+  "underlying": "0xCa4198DAf356F9cA59c3a4403371CF17bca5C68F"
+}

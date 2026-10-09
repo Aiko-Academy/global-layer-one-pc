@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# UNE SURFACE SALE NE PART PAS. Rejoue les portes HORS LIGNE avant chaque push, en une seconde : elle
+# ne joint ni la chaine ni un depot voisin, donc elle ne peut etre ni lente ni floue. La verification
+# du bytecode deploye contre la source (en ligne, RPC) est un pas du RUNBOOK, joue a part.
+# Activation une fois par clone : git config core.hooksPath .githooks
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+node scripts/ci/tous.mjs --rapide
