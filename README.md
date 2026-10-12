@@ -25,7 +25,8 @@ reaches). The atom is a **compliant transfer of a wrapped token**
 (`wrap? → setContext(attestation) → transfer/transferFrom gated by the Policy Manager → unwrap?`);
 a use case is a composition of atoms. The cross-currency pivot is the **Cross-Border Payment
 Orchestrator** (PvP): only there does the currency change; a LayerZero transport preserves its token
-one-for-one and never transforms it.
+one-for-one and never transforms it. The orchestrator is described here by reference only; no ABI,
+interface or tracker for it is part of this surface.
 
 ## Layout
 
@@ -42,8 +43,9 @@ one-for-one and never transforms it.
 
 1. **Reproducibility (offline).** `node scripts/ci/check-handoff.mjs` recomputes the sha256 of every
    published artifact against `MANIFEST.json`, rejects any undeclared file, rejects any non-whitelisted
-   or non-redistributable licence, rejects any tool trace, and rejects any invented address (zero or
-   not EIP-55 checksummed).
+   or non-redistributable licence, rejects any tool trace, and rejects any invented address (zero, or
+   uniform-case where an EIP-55 checksum is expected; the checksum itself is confirmed on-chain, see
+   `RUNBOOK.md`).
 2. **Bytecode against source (on-chain).** The deployed runtime bytecode at each address in
    `deployments/` is compared to the compiled artifact over an RPC endpoint. This step joins the chain
    and is documented in `RUNBOOK.md`; it is kept out of the fast gate so the gate can run before a push
