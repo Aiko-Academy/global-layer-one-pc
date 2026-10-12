@@ -1,7 +1,7 @@
 {
   "source": "Aiko Academy, GL1 Programmable Compliance toolkit",
   "source_commit": "5b5df8d9295a77cd18f2dfd1c9c40671a3eff7ec",
-  "ecrit_le": "2026-10-09",
+  "ecrit_le": "2026-10-12",
   "note": "Surface d exposition redistribuable. Principe : ABI et interfaces reproductibles depuis la source par empreinte ; traceurs lus sur la chaine ; licences MIT ou GPL-3.0 seulement ; aucun artefact BUSL, LZBL ni UNLICENSED ; aucune trace d outil. ABI verifiees contre le bytecode deploye par le RUNBOOK (etape en ligne, RPC).",
   "licences_autorisees": [
     "MIT",
@@ -96,6 +96,14 @@
     "interfaces/IPolicyWrapper.sol": {
       "sha256": "84ddfb3dfaff7e79bbead3e939fff03e1ddba2d73b90395214c0a02f86e5cef6",
       "licence": "MIT"
+    },
+    "deployments/11155111-layerzero-leg.json": {
+      "sha256": "a8ba66dd83cee92ae6b651a208c0e8b0d99ab3f4057b3369ccd5946370a2cb5f",
+      "licence": "data"
+    },
+    "deployments/421614-layerzero-leg.json": {
+      "sha256": "171779bd1dbd343b22296af73d4049d05636fc0bb2da1cfeb937c8ca0fa3e4e0",
+      "licence": "data"
     },
     "deployments/560048-EURX-token.json": {
       "sha256": "a94df2eb31051a6234b99312a1d629fb70b8de084a33a96325a39ecb0c329bb9",

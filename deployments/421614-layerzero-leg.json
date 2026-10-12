@@ -1,0 +1,70 @@
+{
+  "chainId": 421614,
+  "network": "Arbitrum Sepolia testnet",
+  "explorer": "https://sepolia.arbiscan.io",
+  "leg": "cross-border payment demonstration, destination (SGD)",
+  "note": "Public-testnet demonstration of the GL1 PC compliant cross-chain transfer, EUR to SGD. The compliance contracts listed here are OZ 4.9 representations with a reduced interface, deployed only for this demonstration. They are NOT the production contracts and are NOT described by the production ABIs in abi/; the production reference deployment is the 560048 tracker set, whose contracts match those ABIs. The LayerZero OApp layer pins OZ 4.9, which is why the leg runs on these representations. The stablecoin is a demonstration ERC-20, not central bank money, which is never issued on a public chain. The session attestation is signed with a secp256k1 test seal that is kept out of this surface; in production the attestation is validated against the P-256 InstitutionSignatureVerifier (abi/InstitutionSignatureVerifier.json), see references/layerzero.md. Addresses are read from the chain in EIP-55 checksum; this file is data, not licensed code.",
+  "layerZero": {
+    "eid": 40231,
+    "endpointV2": "0x6EDCE65403992e310A62460808c4b910D972f10f"
+  },
+  "contracts": {
+    "stablecoinRepresentation": {
+      "address": "0x48660bD73791264D1cED1b3451e313a85d58c15b",
+      "symbol": "SGDX",
+      "note": "demonstration ERC-20, 18 decimals, not central bank money"
+    },
+    "policyWrapper": {
+      "address": "0x50Ac4aa1A067DfB22f56F61E04AC048d6Ea1f2dE",
+      "symbol": "wSGDX",
+      "represents": "PolicyWrapper",
+      "interface": "reduced OZ 4.9 representation, not the production ABI"
+    },
+    "policyManager": {
+      "address": "0x48a64Ce96e7B4650D97ce67D776f4C0f469aFaf9",
+      "represents": "PolicyManager",
+      "interface": "reduced OZ 4.9 representation, not the production ABI"
+    },
+    "erc20TransferExtractor": {
+      "address": "0x958286a08a640cFAB82736EB9e2b6e2a83E66Db1",
+      "contract": "ERC20TransferExtractor",
+      "note": "the pack extractor compiled under the leg OZ 4.9 profile"
+    },
+    "identityRegistry": {
+      "address": "0x936C06e0deBe2C403C44b82Cc8E010e2be1F4882",
+      "represents": "IdentityRegistry",
+      "interface": "reduced OZ 4.9 representation, not the production ABI"
+    },
+    "credentialRegistry": {
+      "address": "0xC587566fd0712BAa1557d76f76ef5538a765A325",
+      "represents": "CredentialRegistry",
+      "interface": "reduced OZ 4.9 representation, not the production ABI"
+    },
+    "requiredChecksPolicy": {
+      "address": "0x36ad6FF5816E728BA0F0BAA5221cbE82111054E1",
+      "represents": "RequiredChecksPolicy",
+      "interface": "reduced OZ 4.9 representation, not the production ABI"
+    },
+    "envelopeBindingPolicy": {
+      "address": "0x87F449c15365F9CE871E65973F0AfA6964B89083",
+      "represents": "EnvelopeBindingPolicy",
+      "interface": "reduced OZ 4.9 representation, not the production ABI",
+      "ttlSeconds": 3600
+    },
+    "identityGatedPolicy": {
+      "address": "0x9DA5cC7BCC0C0236d46004bF4e0952C09252bf20",
+      "represents": "IdentityGatedPolicy",
+      "interface": "reduced OZ 4.9 representation, not the production ABI"
+    },
+    "complianceOftAdapter": {
+      "address": "0x352C9dc30D14d9E3984B3715760238503de61D8a",
+      "contract": "ComplianceOFTAdapter",
+      "note": "OApp OFTAdapter on the LayerZero permissive messaging layer; its source imports LayerZero and is not redistributed in this surface, see references/layerzero.md"
+    },
+    "arrivalComposer": {
+      "address": "0x5F9eFC535C6E380d3ad3Ef490969f9B7aF77C4AB",
+      "contract": "ArrivalComposer",
+      "note": "LayerZero compose receiver that delivers to the beneficiary by a gated transfer; its source imports LayerZero and is not redistributed in this surface"
+    }
+  }
+}
