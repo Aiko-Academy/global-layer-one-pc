@@ -1,8 +1,8 @@
 {
   "InstitutionSignatureVerifierLiveDomain": "0x75cdbB9E8bc293f1d4d5DFbBC28A21F15692be13",
   "attestationDomain": "0x88fB0fBdB2495D8E6f2e6E8D6c40A0bAa1f99252",
-  "block": 3635600,
-  "keysMirrored": 88,
+  "block": 3794163,
+  "keysMirrored": 101,
   "keysRegisteredNow": 0,
   "liveInstitutionVerifier": "0x88fB0fBdB2495D8E6f2e6E8D6c40A0bAa1f99252",
   "liveTeeVerifier": "0xEAe5Ed78dbfA782e655c749e10E1f321fd34D5c8",

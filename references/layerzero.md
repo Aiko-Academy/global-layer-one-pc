@@ -16,3 +16,11 @@ already deployed; we never embed the non-redistributable plumbing.
   gated transfer that runs the policies against that attestation.
 - Licence: consumed through the permissive messaging layer only. A deployment with designated
   participants reviews the commercial licence before hosting any plumbing.
+- Risk controls and scope: the leg runs the compliance policies on every transfer, and the Policy
+  Wrapper carries a global pause (Administrative Control). The cross-chain risk guardrails, meaning
+  the security-stack tuning (verifier set, confirmations, executor), a per-route stop, per-chain rate
+  limiting, pre-financed reserve management, and the failure return path, are the role of the
+  Cross-Border Payment Orchestrator and are out of this surface. On the demonstration legs the
+  transport runs on the default testnet configuration; a destination credit against an insufficient
+  reserve reverts, with no partial credit, and a refused delivery is recorded without automatic replay
+  or refund.
