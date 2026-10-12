@@ -2,8 +2,9 @@
 
 This repository is the **redistributable exposure surface** of the GL1 Programmable Compliance (PC)
 toolkit: verified contract ABIs, source interfaces, on-chain deployment trackers, and the reference
-notes that credit the upstream projects. It is meant to be read and verified by counterparties
-(Chainlink, GLEIF, LayerZero). It carries no source build, no dependencies,
+notes that credit the upstream projects. It is meant to be read and verified by institutional
+counterparties, and by the upstream projects it credits (Chainlink, GLEIF, LayerZero). It carries no
+source build, no dependencies,
 no demo, and nothing internal.
 
 ## What the toolkit is

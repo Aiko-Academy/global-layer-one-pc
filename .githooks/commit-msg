@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Zero trace d'outil dans un message de commit de la surface d'exposition (lue par Chainlink,
-# GLEIF, LayerZero). Refuse une mention d'assistant, un co-auteur machine, un cadratin (couche 0).
+# Zero trace d'outil dans un message de commit de la surface d'exposition (lue par des contreparties
+# institutionnelles externes). Refuse une mention d'assistant, un co-auteur machine, un cadratin (couche 0).
 # Activation une fois par clone : git config core.hooksPath .githooks
 set -euo pipefail
 msg="$(cat "$1")"

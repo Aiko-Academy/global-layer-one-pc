@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Garde de livraison de la surface d'exposition. Refuse, HORS LIGNE (ne joint ni chaine ni depot
-// voisin), ce qui ne doit pas partir chez un tiers (Chainlink, GLEIF, LayerZero) :
+// voisin), ce qui ne doit pas partir chez un tiers (une contrepartie institutionnelle externe) :
 //
 //   1. une DERIVE : un artefact dont l'empreinte ne reproduit plus celle du MANIFEST ;
 //   2. un fichier NON DECLARE sous abi/ interfaces/ deployments/ (surface = exactement le MANIFEST) ;
@@ -24,7 +24,7 @@ const TRACES = [['Co-', 'Authored-', 'By'].join(''), ['Clau', 'de'].join(''),
 // Une licence interdite se juge sur une DECLARATION SPDX reelle dans un artefact, pas sur une prose
 // qui explique la politique (une doc a le droit de nommer BUSL pour dire qu'on l'exclut).
 const SPDX_INTERDIT = new RegExp('SPDX-License-Identifier:\\s*(BUSL-1\\.1|' + ['LZ', 'BL'].join('') + '[-\\w.]*|UNLICENSED)');
-const CADRATIN = '—';
+const CADRATIN = String.fromCharCode(0x2014);
 const LICENCES_OK = new Set(['MIT', 'GPL-3.0', 'data']);
 const ZERO = '0x' + '0'.repeat(40);
 
@@ -58,7 +58,7 @@ function fichiersSurface() {
       else out.push(rel);
     }
   };
-  ['abi', 'interfaces', 'deployments', 'references'].forEach(marche);
+  ['abi', 'interfaces', 'deployments', 'references', 'scripts', '.githooks'].forEach(marche);
   for (const f of ['README.md', 'RUNBOOK.md', 'MANIFEST.json']) if (existsSync(join(RACINE, f))) out.push(f);
   return out;
 }

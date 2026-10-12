@@ -1,7 +1,7 @@
 # RUNBOOK: verifying the GL1 PC exposure surface
 
 This runbook is the companion to the offline delivery gate described in the README. It sets out, step
-by step, how a counterparty (Chainlink, GLEIF, LayerZero) checks that this
+by step, how an institutional counterparty checks that this
 surface is exactly what it claims to be. Verification has two layers: an offline layer that needs no
 network, and an on-chain layer that reads the public test networks.
 
