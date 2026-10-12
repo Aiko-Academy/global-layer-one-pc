@@ -45,7 +45,7 @@ one-for-one and never transforms it.
    not EIP-55 checksummed).
 2. **Bytecode against source (on-chain).** The deployed runtime bytecode at each address in
    `deployments/` is compared to the compiled artifact over an RPC endpoint. This step joins the chain
-   and is documented in the RUNBOOK; it is kept out of the fast gate so the gate can run before a push
+   and is documented in `RUNBOOK.md`; it is kept out of the fast gate so the gate can run before a push
    without depending on the network.
 
 Enable the gates once per clone:
@@ -59,7 +59,8 @@ git config core.hooksPath .githooks
 ## Licensing
 
 Our own surface is **MIT**, except the two zero-knowledge verifiers auto-generated from circuits,
-redistributed under **GPL-3.0**. No artifact here is under a non-redistributable licence
+redistributed under **GPL-3.0**. The full texts are in `LICENSE` (MIT) and `LICENSE-GPL-3.0`; the
+per-file licence is recorded in `MANIFEST.json`. No artifact here is under a non-redistributable licence
 (BUSL-1.1, LayerZero BUSL, UNLICENSED); vendored dependencies under such licences stay private and are
 never part of this surface. LayerZero is consumed through its permissive messaging layer and credited
 by reference; Chainlink ACE and vLEI are credited by reference, never copied.

@@ -59,7 +59,7 @@ function fichiersSurface() {
     }
   };
   ['abi', 'interfaces', 'deployments', 'references'].forEach(marche);
-  for (const f of ['README.md', 'MANIFEST.json']) if (existsSync(join(RACINE, f))) out.push(f);
+  for (const f of ['README.md', 'RUNBOOK.md', 'MANIFEST.json']) if (existsSync(join(RACINE, f))) out.push(f);
   return out;
 }
 for (const rel of fichiersSurface()) {
