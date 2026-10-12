@@ -1,6 +1,6 @@
 {
   "source": "Aiko Academy, GL1 Programmable Compliance toolkit",
-  "source_commit": "5b5df8d9295a77cd18f2dfd1c9c40671a3eff7ec",
+  "source_commit": "f5a8ece3c12b5d0d864a6390cda5234675e38fc1",
   "ecrit_le": "2026-10-12",
   "note": "Surface d exposition redistribuable. Principe : ABI et interfaces reproductibles depuis la source par empreinte ; traceurs lus sur la chaine ; licences MIT ou GPL-3.0 seulement ; aucun artefact BUSL, LZBL ni UNLICENSED ; aucune trace d outil. ABI verifiees contre le bytecode deploye par le RUNBOOK (etape en ligne, RPC).",
   "licences_autorisees": [
@@ -82,19 +82,19 @@
       "licence": "MIT"
     },
     "interfaces/ComplianceTypes.sol": {
-      "sha256": "03c052d71f16f11dc716dc2e6c378a9a5b359202898571bc2646bd1dd186be7c",
+      "sha256": "1eabda976308900ea743a9e55b233a301da953531aa6f4fcf9d60f4c2a2e7603",
       "licence": "MIT"
     },
     "interfaces/IPolicy.sol": {
-      "sha256": "bde9e97fc3122d4f9d2b68f4fef9806eb95e0099a1f1d2c7399d794ff6ac4c30",
+      "sha256": "dd6187f7b9e824bf315a33c9040d4c870c7f7296d547b4b7d114897c942b59cc",
       "licence": "MIT"
     },
     "interfaces/IPolicyManager.sol": {
-      "sha256": "263004524db8e27d18c0d3b58b4c5e7853cf07bec4d0832f3f92b557a7cafb70",
+      "sha256": "59d02785c708f1417f079a058adba5bad5282a8b902a4eeaf39a51a791dea45d",
       "licence": "MIT"
     },
     "interfaces/IPolicyWrapper.sol": {
-      "sha256": "84ddfb3dfaff7e79bbead3e939fff03e1ddba2d73b90395214c0a02f86e5cef6",
+      "sha256": "150258f2181d2f1c836a9a834b56a12cb3554f86bc55efaa0ac5080fb8c0c121",
       "licence": "MIT"
     },
     "deployments/11155111-layerzero-leg.json": {

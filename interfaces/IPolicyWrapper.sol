@@ -4,10 +4,10 @@ pragma solidity ^0.8.28;
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 /// @title IPolicyWrapper
-/// @notice Le Policy Wrapper du whitepaper GL1 : un ERC-20 qui emballe un jeton sous-jacent un pour un
-///         (lock-and-mint), transfere sous politique (le Policy Manager evalue chaque transfert avec
-///         l'attestation mise en contexte), se deballe, et porte l'Administrative Control : restriction
-///         d'adresse, gel, transfert force, pause.
+/// @notice The Policy Wrapper from the GL1 whitepaper: an ERC-20 that wraps an underlying token one for one
+///         (lock-and-mint), transfers under policy (the Policy Manager evaluates each transfer with the
+///         attestation set as context), unwraps, and carries the Administrative Control: address restriction,
+///         freeze, forced transfer, pause.
 interface IPolicyWrapper is IERC20 {
     event TokenWrap(address indexed from, address indexed to, uint256 amount, address underlying);
     event TokenUnwrap(address indexed from, address indexed to, uint256 amount, address underlying);
@@ -23,16 +23,16 @@ interface IPolicyWrapper is IERC20 {
     error InsufficientUnfrozenBalance(address account, uint256 available, uint256 needed);
     error PolicyManagerNotSet();
 
-    /// @notice Met en contexte, pour l'appelant, l'attestation que le prochain transfert gate consommera.
+    /// @notice Sets as context, for the caller, the attestation the next gated transfer will consume.
     function setContext(bytes calldata context) external;
 
-    /// @notice Emballe `amount` de sous-jacent, pris chez l'appelant, au profit de `to`.
+    /// @notice Wraps `amount` of underlying, taken from the caller, for the benefit of `to`.
     function depositFor(address to, uint256 amount) external returns (bool);
 
-    /// @notice Deballe `amount` de l'appelant vers `to`.
+    /// @notice Unwraps `amount` from the caller to `to`.
     function withdrawTo(address to, uint256 amount) external returns (bool);
 
-    /// @dev `underlying()` est servi par ERC20Wrapper d'OpenZeppelin, non virtuel : il ne se declare pas ici.
+    /// @dev `underlying()` is provided by OpenZeppelin's ERC20Wrapper, non-virtual: it is not declared here.
     function policyManager() external view returns (address);
 
     // ── Administrative Control ─────────────────────────────────────────────────────────────────────────

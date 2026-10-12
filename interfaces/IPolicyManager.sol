@@ -4,12 +4,12 @@ pragma solidity ^0.8.28;
 import {IPolicy} from "./IPolicy.sol";
 
 /// @title IPolicyManager
-/// @notice Le Policy Manager du whitepaper GL1 : le point de coordination entre les Policy Wrappers et les
-///         modules d'evaluation. Une cible (un wrapper) s'y attache ; pour chaque operation (selecteur) elle
-///         porte une liste ordonnee de politiques, une version, un etat d'activation ; `run` les evalue dans
-///         l'ordre et refuse au premier refus.
+/// @notice The Policy Manager from the GL1 whitepaper: the coordination point between the Policy Wrappers and
+///         the evaluation modules. A target (a wrapper) attaches to it; for each operation (selector) it
+///         carries an ordered list of policies, a version, an activation state; `run` evaluates them in
+///         order and rejects on the first rejection.
 interface IPolicyManager {
-    /// @notice Ce sur quoi les politiques travaillent : l'operation, l'appelant, les arguments, l'attestation.
+    /// @notice What the policies work on: the operation, the caller, the arguments, the attestation.
     struct Payload {
         bytes4 selector;
         address sender;
@@ -17,7 +17,7 @@ interface IPolicyManager {
         bytes context;
     }
 
-    /// @notice Une valeur extraite d'un appel, nommee (keccak256 du nom) pour etre distribuee aux politiques.
+    /// @notice A value extracted from a call, named (keccak256 of the name) to be distributed to the policies.
     struct Parameter {
         bytes32 name;
         bytes value;
@@ -42,14 +42,14 @@ interface IPolicyManager {
     error PolicyRunError(bytes4 selector, address policy, bytes err);
     error PolicyPostRunError(bytes4 selector, address policy, bytes err);
 
-    // ── attachement et extraction ──────────────────────────────────────────────────────────────────────
+    // ── attachment and extraction ──────────────────────────────────────────────────────────────────────
     function attach() external;
     function detach() external;
     function isAttached(address target) external view returns (bool);
     function setExtractor(bytes4 selector, address extractor) external;
     function getExtractor(bytes4 selector) external view returns (address);
 
-    // ── la liste ordonnee, par cible et par operation ──────────────────────────────────────────────────
+    // ── the ordered list, by target and by operation ───────────────────────────────────────────────────
     function addPolicy(address target, bytes4 selector, address policy, bytes32[] calldata parameterNames) external;
     function addPolicyAt(
         address target,
@@ -65,32 +65,32 @@ interface IPolicyManager {
         view
         returns (bytes32[] memory);
 
-    // ── version, activation, perimetre effectif, regle par defaut ──────────────────────────────────────
-    /// @notice La version de politique d'une cible : incrementee a chaque changement de configuration.
+    // ── version, activation, effective scope, default rule ─────────────────────────────────────────────
+    /// @notice The policy version of a target: incremented on every configuration change.
     function policyVersion(address target) external view returns (uint64);
-    /// @notice Le libelle pose avec la derniere version (par exemple "2026.09-01").
+    /// @notice The label set with the latest version (for example "2026.09-01").
     function policyVersionLabel(address target) external view returns (string memory);
-    /// @notice Pose un libelle et incremente la version, sans autre changement.
+    /// @notice Sets a label and increments the version, with no other change.
     function labelPolicyVersion(address target, string calldata label) external;
-    /// @notice Le condense de la liste ordonnee pour une operation : ce qu'une attestation reference.
+    /// @notice The digest of the ordered list for an operation: what an attestation references.
     function policyDescriptor(address target, bytes4 selector) external view returns (bytes32);
-    /// @notice Active ou suspend l'evaluation pour une operation ; suspendue, la regle par defaut s'applique.
+    /// @notice Activates or suspends evaluation for an operation; when suspended, the default rule applies.
     function setActive(address target, bytes4 selector, bool active) external;
     function isActive(address target, bytes4 selector) external view returns (bool);
-    /// @notice Le perimetre effectif d'une cible : les operations qui portent au moins une politique.
+    /// @notice The effective scope of a target: the operations that carry at least one policy.
     function scopeOf(address target) external view returns (bytes4[] memory selectors);
     function setDefaultAllow(bool allow) external;
     function setTargetDefaultAllow(address target, bool set, bool allow) external;
 
-    // ── l'evaluation ───────────────────────────────────────────────────────────────────────────────────
-    /// @notice Evalue sans ecrire (pas de `postRun`). Reverte si refuse.
+    // ── evaluation ─────────────────────────────────────────────────────────────────────────────────────
+    /// @notice Evaluates without writing (no `postRun`). Reverts if rejected.
     function check(Payload calldata payload) external view;
-    /// @notice Evalue et applique (`postRun` de chaque politique parcourue). Reverte si refuse.
+    /// @notice Evaluates and applies (`postRun` of each policy traversed). Reverts if rejected.
     function run(Payload calldata payload) external;
 }
 
 /// @title IExtractor
-/// @notice Extrait d'un appel les valeurs nommees que les politiques lisent (from, to, amount pour un ERC-20).
+/// @notice Extracts from a call the named values the policies read (from, to, amount for an ERC-20).
 interface IExtractor {
     function extract(IPolicyManager.Payload calldata payload) external view returns (IPolicyManager.Parameter[] memory);
 }
