@@ -1,6 +1,6 @@
-# GL1 Programmable Compliance Toolkit: exposure surface
+# Programmable Compliance Toolkit: exposure surface
 
-This repository is the **redistributable exposure surface** of the GL1 Programmable Compliance (PC)
+This repository is the **redistributable exposure surface** of the Programmable Compliance (PC)
 toolkit: verified contract ABIs, source interfaces, on-chain deployment trackers, and the reference
 notes that credit the upstream projects. It is meant to be read and verified by institutional
 counterparties, and by the upstream projects it credits (Chainlink, GLEIF, LayerZero). It carries no
@@ -9,7 +9,7 @@ no demo, and nothing internal.
 
 ## What the toolkit is
 
-The GL1 PC toolkit is best-of-class **by the composability of four bricks**, each a leader in its
+The PC toolkit is best-of-class **by the composability of four bricks**, each a leader in its
 role, none imposed:
 
 - **PBM (Policy Wrapper)**: compliance as a detachable layer over an immutable asset.

@@ -1,5 +1,5 @@
 {
-  "source": "Aiko Academy, GL1 Programmable Compliance toolkit",
+  "source": "Aiko Academy, Programmable Compliance toolkit",
   "source_commit": "f5a8ece3c12b5d0d864a6390cda5234675e38fc1",
   "ecrit_le": "2026-10-13",
   "note": "Surface d exposition redistribuable. Principe : ABI et interfaces reproductibles depuis la source par empreinte ; traceurs lus sur la chaine ; licences AGPL-3.0 ou GPL-3.0 seulement ; aucun artefact BUSL, LZBL ni UNLICENSED ; aucune trace d outil. ABI verifiees contre le bytecode deploye par le RUNBOOK (etape en ligne, RPC).",
@@ -98,11 +98,11 @@
       "licence": "AGPL-3.0"
     },
     "deployments/11155111-layerzero-leg.json": {
-      "sha256": "a8ba66dd83cee92ae6b651a208c0e8b0d99ab3f4057b3369ccd5946370a2cb5f",
+      "sha256": "9c02f228fe547ffafc3d9cc1599b9b0bfaa2df040661657fb8d27279e249b32f",
       "licence": "data"
     },
     "deployments/421614-layerzero-leg.json": {
-      "sha256": "171779bd1dbd343b22296af73d4049d05636fc0bb2da1cfeb937c8ca0fa3e4e0",
+      "sha256": "88d1317637ad72eb5de8c755f543162857ff3a022b26667af2f827063242df05",
       "licence": "data"
     },
     "deployments/560048-EURX-token.json": {

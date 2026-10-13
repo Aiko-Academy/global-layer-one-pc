@@ -1,4 +1,4 @@
-# RUNBOOK: verifying the GL1 PC exposure surface
+# RUNBOOK: verifying the PC exposure surface
 
 This runbook is the companion to the offline delivery gate described in the README. It sets out, step
 by step, how an institutional counterparty checks that this

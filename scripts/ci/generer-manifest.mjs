@@ -38,7 +38,7 @@ for (const f of lister('deployments')) {
 }
 
 const manifest = {
-  source: 'Aiko Academy, GL1 Programmable Compliance toolkit',
+  source: 'Aiko Academy, Programmable Compliance toolkit',
   source_commit: SOURCE_COMMIT,
   ecrit_le: ECRIT_LE,
   note: 'Surface d exposition redistribuable. Principe : ABI et interfaces reproductibles depuis la source par empreinte ; traceurs lus sur la chaine ; licences AGPL-3.0 ou GPL-3.0 seulement ; aucun artefact BUSL, LZBL ni UNLICENSED ; aucune trace d outil. ABI verifiees contre le bytecode deploye par le RUNBOOK (etape en ligne, RPC).',
