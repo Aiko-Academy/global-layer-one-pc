@@ -9,4 +9,4 @@ Legal Entity Identifiers are resolved at GLEIF, never derived from a name.
 - Identifiers: entity identifiers are issued and registered on chain; a LEI is relied upon only when
   resolved at GLEIF, never invented.
 - Licence: GLEIF specifications and trust chain are credited by reference; our validator and registries
-  are MIT and published in `abi/` and `interfaces/`.
+  are AGPL-3.0 and published in `abi/` and `interfaces/`.

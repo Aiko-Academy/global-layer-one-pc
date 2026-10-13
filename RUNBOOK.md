@@ -20,7 +20,7 @@ The gate (`scripts/ci/check-handoff.mjs`) recomputes the sha256 of every publish
 - any artifact whose digest no longer matches the manifest (a drift);
 - any file under `abi/`, `interfaces/` or `deployments/` not declared in the manifest (the surface is
   exactly the manifest);
-- any licence outside the whitelist (MIT, GPL-3.0, data), and any non-redistributable licence
+- any licence outside the whitelist (AGPL-3.0, GPL-3.0, data), and any non-redistributable licence
   declaration (BUSL, the LayerZero source-available licence, or an unlicensed artifact);
 - any tool trace in the surface read by the counterparty;
 - any invented address in a tracker (zero, or not in EIP-55 mixed-case checksum).

@@ -11,4 +11,4 @@ in full: we study the interface and the pattern and copy no line into this surfa
   LayerZero; the off-chain verdict comes from the node's Compliance Rules Engine (signed check results,
   P-256 or TEE), verified by `AttestationValidatorPolicy` / `InstitutionSignatureVerifier` /
   `ZkCheckRegistry`, not a Chainlink DON.
-- Licence: no ACE code is redistributed here. The model is credited; the implementation is ours (MIT).
+- Licence: no ACE code is redistributed here. The model is credited; the implementation is ours (AGPL-3.0).

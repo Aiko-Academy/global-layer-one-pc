@@ -61,8 +61,8 @@ git config core.hooksPath .githooks
 
 ## Licensing
 
-Our own surface is **MIT**, except the two zero-knowledge verifiers auto-generated from circuits,
-redistributed under **GPL-3.0**. The full texts are in `LICENSE` (MIT) and `LICENSE-GPL-3.0`; the
+Our own surface is **AGPL-3.0**, except the two zero-knowledge verifiers auto-generated from circuits,
+redistributed under **GPL-3.0**. The full texts are in `LICENSE` (AGPL-3.0) and `LICENSE-GPL-3.0`; the
 per-file licence is recorded in `MANIFEST.json`. No artifact here is under a non-redistributable licence
 (BUSL-1.1, LayerZero BUSL, UNLICENSED); vendored dependencies under such licences stay private and are
 never part of this surface. LayerZero is consumed through its permissive messaging layer and credited

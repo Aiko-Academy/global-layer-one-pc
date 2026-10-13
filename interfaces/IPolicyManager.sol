@@ -1,4 +1,5 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: AGPL-3.0
+// Copyright (C) 2026 Aiko Academy. Licensed under the GNU Affero General Public License, version 3.
 pragma solidity ^0.8.28;
 
 import {IPolicy} from "./IPolicy.sol";

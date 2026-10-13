@@ -1,37 +1,37 @@
 {
   "source": "Aiko Academy, GL1 Programmable Compliance toolkit",
   "source_commit": "f5a8ece3c12b5d0d864a6390cda5234675e38fc1",
-  "ecrit_le": "2026-10-12",
-  "note": "Surface d exposition redistribuable. Principe : ABI et interfaces reproductibles depuis la source par empreinte ; traceurs lus sur la chaine ; licences MIT ou GPL-3.0 seulement ; aucun artefact BUSL, LZBL ni UNLICENSED ; aucune trace d outil. ABI verifiees contre le bytecode deploye par le RUNBOOK (etape en ligne, RPC).",
+  "ecrit_le": "2026-10-13",
+  "note": "Surface d exposition redistribuable. Principe : ABI et interfaces reproductibles depuis la source par empreinte ; traceurs lus sur la chaine ; licences AGPL-3.0 ou GPL-3.0 seulement ; aucun artefact BUSL, LZBL ni UNLICENSED ; aucune trace d outil. ABI verifiees contre le bytecode deploye par le RUNBOOK (etape en ligne, RPC).",
   "licences_autorisees": [
-    "MIT",
+    "AGPL-3.0",
     "GPL-3.0",
     "data"
   ],
   "fichiers": {
     "abi/AttestationValidatorPolicy.json": {
       "sha256": "defce4fec72e1ccd925370f502314c9d5a805bfe1f2583ef99641e56d55b7349",
-      "licence": "MIT"
+      "licence": "AGPL-3.0"
     },
     "abi/ComplianceKeyRegistry.json": {
       "sha256": "dda5d3727d33b1775a839cba7c714b11df39f3ccdd3bc5b14b87445e069fe175",
-      "licence": "MIT"
+      "licence": "AGPL-3.0"
     },
     "abi/CredentialRegistry.json": {
       "sha256": "f4e7b07ebb9d5a95ef821a231dff5f0ce99606f158da97bf73d072b8ab0382ba",
-      "licence": "MIT"
+      "licence": "AGPL-3.0"
     },
     "abi/ERC20TransferExtractor.json": {
       "sha256": "fa99d5adf5340e0ee29708626506c06533b58a875e3ad511f5959192e9c52b66",
-      "licence": "MIT"
+      "licence": "AGPL-3.0"
     },
     "abi/EnvelopeBindingPolicy.json": {
       "sha256": "cbbc0711f0947fe0c6d3f8d47fa2e9bd3c5914cff45f682834f109cfe88b2e78",
-      "licence": "MIT"
+      "licence": "AGPL-3.0"
     },
     "abi/Groth16ZkAdapter.json": {
       "sha256": "4b1d24e2cc6c9a4de088141f74b2e4e1de9d42fea81a2cfd0e91cd3047502dc0",
-      "licence": "MIT"
+      "licence": "AGPL-3.0"
     },
     "abi/HolderKycGroth16Verifier.json": {
       "sha256": "b13f3db40693bb15f2b1b0c74e2d32fea497e9c26815e06837716b719d3c7609",
@@ -39,27 +39,27 @@
     },
     "abi/IdentityGatedPolicy.json": {
       "sha256": "4a0ba773c1efe5cc400b59d1260f1b493fc519b4993a999178d831a8d790e16e",
-      "licence": "MIT"
+      "licence": "AGPL-3.0"
     },
     "abi/IdentityRegistry.json": {
       "sha256": "e7f130023d219410512c55aa99937a7d8e37f4e4e49cc4807a2c016fe8d3ae4f",
-      "licence": "MIT"
+      "licence": "AGPL-3.0"
     },
     "abi/InstitutionSignatureVerifier.json": {
       "sha256": "ce7859d8d5ed7d61da2dd469b3f38d948db39a03bbbfbcfd153911379108195e",
-      "licence": "MIT"
+      "licence": "AGPL-3.0"
     },
     "abi/PolicyManager.json": {
       "sha256": "38b5d39f1906e7eb7924c7e14409ca5a040e92e4cd66b623043b86c1a91f6093",
-      "licence": "MIT"
+      "licence": "AGPL-3.0"
     },
     "abi/PolicyWrapper.json": {
       "sha256": "108b9606049291460111b0ac96b997f77bb4bab0e50f22eca200e7985f29d30e",
-      "licence": "MIT"
+      "licence": "AGPL-3.0"
     },
     "abi/RequiredChecksPolicy.json": {
       "sha256": "649c4b082ab41fa15284bc13caa76f7d77f413e8fa0205ddfca20bc729788a24",
-      "licence": "MIT"
+      "licence": "AGPL-3.0"
     },
     "abi/SanctionsGroth16Verifier.json": {
       "sha256": "a0fa198ddc3a5ff8960114bbf571baa7af3b638c216ab3fac1445a6df3c86a8b",
@@ -67,35 +67,35 @@
     },
     "abi/TeeAttestationVerifier.json": {
       "sha256": "f2b3f6ac0db8b240d7e8ac75a76b306de2317e6e8ff566a4b435e2c085aa7f45",
-      "licence": "MIT"
+      "licence": "AGPL-3.0"
     },
     "abi/TeeTrustRegistry.json": {
       "sha256": "7ad41a779a9f0c5d4222fffa4c5e715dcb947a8044c1df3520ac8be14e687454",
-      "licence": "MIT"
+      "licence": "AGPL-3.0"
     },
     "abi/VLEICredentialDataValidator.json": {
       "sha256": "53ed9a07645d49200dabfe17059fda405f18a90990e4576940b83f514a59c2c4",
-      "licence": "MIT"
+      "licence": "AGPL-3.0"
     },
     "abi/ZkCheckRegistry.json": {
       "sha256": "23d6da83c24dffd85ce7a393771620d8cf6dd8f69139647b0d29e2879282db07",
-      "licence": "MIT"
+      "licence": "AGPL-3.0"
     },
     "interfaces/ComplianceTypes.sol": {
-      "sha256": "1eabda976308900ea743a9e55b233a301da953531aa6f4fcf9d60f4c2a2e7603",
-      "licence": "MIT"
+      "sha256": "2770cd80b078da3abbb4b69156b2186dcc7cfa10363832d20187ca3e86eed9bd",
+      "licence": "AGPL-3.0"
     },
     "interfaces/IPolicy.sol": {
-      "sha256": "dd6187f7b9e824bf315a33c9040d4c870c7f7296d547b4b7d114897c942b59cc",
-      "licence": "MIT"
+      "sha256": "a935d221c7c1b95d52c32c35330957366524a1e5ed4ed07376c56495d853fc2d",
+      "licence": "AGPL-3.0"
     },
     "interfaces/IPolicyManager.sol": {
-      "sha256": "59d02785c708f1417f079a058adba5bad5282a8b902a4eeaf39a51a791dea45d",
-      "licence": "MIT"
+      "sha256": "5e13eb6f9b99d07e56473abd64a988cf4cb863988abf3cd042433bdaf74bf475",
+      "licence": "AGPL-3.0"
     },
     "interfaces/IPolicyWrapper.sol": {
-      "sha256": "150258f2181d2f1c836a9a834b56a12cb3554f86bc55efaa0ac5080fb8c0c121",
-      "licence": "MIT"
+      "sha256": "144ae512e776e2f4cdeeefa191415ff885e40e1b7bb77cfb065a93f65897087e",
+      "licence": "AGPL-3.0"
     },
     "deployments/11155111-layerzero-leg.json": {
       "sha256": "a8ba66dd83cee92ae6b651a208c0e8b0d99ab3f4057b3369ccd5946370a2cb5f",
