@@ -54,5 +54,35 @@
     }
   },
   "lzEndpointV2": "0x6EDCE65403992e310A62460808c4b910D972f10f",
-  "pairing": "SRC_ADAPTER_FX.peers(40231) = RECV_ADAPTER_EUR ; RECV_ADAPTER_EUR.peers(40161) = SRC_ADAPTER_FX (verifie on-chain)"
+  "pairing": "SRC_ADAPTER_FX.peers(40231) = RECV_ADAPTER_EUR ; RECV_ADAPTER_EUR.peers(40161) = SRC_ADAPTER_FX (verifie on-chain)",
+  "demonstration_passes": {
+    "note": "Live testnet transactions of the two demonstration passes, read from the chain, each between two named demonstration VASPs. This is data, not a reproducibility claim; it is replayed by scripts/demo/corridor-fx-e2e.mjs, which reads each receipt on the public RPC and renders its state. Both arrival transactions carry EVM status success: the refusal is semantic (the composer rolls the swap back and keeps the value in transit), not a reverted transaction. Party names (BANK FR, BANK SG1, BANK SG2) are demonstration labels for identified financial institutions, not central bank entities.",
+    "conforming": {
+      "outcome": "settled",
+      "rate_sgd_per_eur": 1.469792,
+      "beneficiary_delta_sgdx": "73.489588053033904009",
+      "parties": {
+        "originatingFI": { "name": "BANK FR", "address": "0x7C0984484391D6cD7bFc68d12D1fD3c48f1BbB38", "role": "pays EUR, identified on Ethereum Sepolia (vLEI + KYB)" },
+        "beneficiaryFI": { "name": "BANK SG1", "address": "0xadEe31407e2AdcA6B0f25Bd039DCe047B80AfAde", "role": "receives SGD, identified on Arbitrum Sepolia (vLEI + KYB)" }
+      },
+      "legs": [
+        { "chainId": 11155111, "phase": "lock", "tx": "0x630e7e17d727fc858153f615854d88d24848da92de0437da1199a8fce1407037", "what": "50 EURX locked at source by BANK FR; the source adapter holds 50 EURX" },
+        { "chainId": 421614, "phase": "swap+deliver", "tx": "0x9d43507091a67731fe1dcaecce8f2ce560a6adb13e5f6ae8b358a71c1986746b", "what": "atomic lzCompose: swap 50 EURX to 73.489588 SGDX at 1.469792 SGD/EUR, then gated delivery to BANK SG1 (vLEI verified); reserve EURX released, composer keeps nothing" }
+      ]
+    },
+    "refused": {
+      "outcome": "refused",
+      "quote_sgd_per_eur": 1.469781,
+      "beneficiary_delta_sgdx": "0",
+      "reason": "beneficiary BANK SG2 not identified on Arbitrum (no vLEI/KYB credential, getIdentity = 0); gated delivery refused by the identity-gated policy",
+      "parties": {
+        "originatingFI": { "name": "BANK FR", "address": "0x7C0984484391D6cD7bFc68d12D1fD3c48f1BbB38", "role": "pays EUR, source conforming" },
+        "beneficiaryFI": { "name": "BANK SG2", "address": "0x96495854Da659fa8e75781bbd1D4767721eff401", "role": "attempts to receive SGD, not identified on Arbitrum" }
+      },
+      "legs": [
+        { "chainId": 11155111, "phase": "lock", "tx": "0x789cd3d54f975b53662279237978eea0bc82724277446f2bafc41f181edd88d9", "what": "50 EURX locked at source by BANK FR; beneficiary BANK SG2 is not identified" },
+        { "chainId": 421614, "phase": "refuse", "tx": "0x18be69b039f9fb3fe043ce1f4957b256a8cc4099a63ccc05c51b58698919666a", "what": "gated delivery refused; the swap is rolled back by the atomic call; the Uniswap V3 pool is unchanged; value kept in transit as 50 wEURX in its origin currency; BANK SG2 receives 0 SGDX; composer lastRefusal is 196 bytes" }
+      ]
+    }
+  }
 }

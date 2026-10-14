@@ -50,6 +50,25 @@ stablecoins on the legs are demonstration ERC-20 tokens, never central bank mone
 issued on a public chain. The same address string can denote different contracts on different chains:
 deployment is deterministic by deployer and nonce, and each tracker is read on its own chain id.
 
+### Replaying the FX corridor from the surface
+
+The FX cross-chain corridor (EURX to SGD, changed at the arrival pivot by a Uniswap V3 pool and gated
+by the Policy Wrapper) carries its two demonstration passes in `deployments/fx-corridor.json`, under
+`demonstration_passes`: the conforming pass that settled, and the refused pass where delivery to an
+unidentified beneficiary was refused with no FX change. A reader holding only this surface replays both
+end to end, reading each receipt live on the public RPC:
+
+```
+node scripts/demo/corridor-fx-e2e.mjs
+```
+
+For each leg it prints the block, the EVM status, the transaction target cross-checked against a named
+corridor contract, and the explorer link, then the business outcome of each pass. It is read only: it
+joins the public chains, signs nothing and holds no key (point it at your own node with `--rpc-sepolia`
+and `--rpc-arbitrum` if you prefer the public endpoints not be used). Both arrival transactions carry
+EVM status success; the refusal is semantic, so the proof of refusal is the pair beneficiary receives 0
+SGDX and the pool is unchanged, not a reverted transaction.
+
 ## 3. On-chain, bytecode against source (participant holding the toolkit)
 
 The strongest check compares the runtime bytecode deployed at each address to the bytecode compiled
