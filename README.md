@@ -62,8 +62,9 @@ git config core.hooksPath .githooks
 ## Licensing
 
 Our own surface is **AGPL-3.0**, except the two zero-knowledge verifiers auto-generated from circuits,
-redistributed under **GPL-3.0**. The full texts are in `LICENSE` (AGPL-3.0) and `LICENSE-GPL-3.0`; the
-per-file licence is recorded in `MANIFEST.json`. No artifact here is under a non-redistributable licence
+redistributed under **GPL-3.0**, and the cross-chain FX corridor contracts (`ComplianceOFTAdapter`,
+`ArrivalComposerFX`, `PolicyWrapperOZ4`), our own permissive code, redistributed under **MIT**. The full
+texts are in `LICENSE` (AGPL-3.0) and `LICENSE-GPL-3.0`; the per-file licence is recorded in `MANIFEST.json`. No artifact here is under a non-redistributable licence
 (BUSL-1.1, LayerZero BUSL, UNLICENSED); vendored dependencies under such licences stay private and are
 never part of this surface. LayerZero is consumed through its permissive messaging layer and credited
 by reference; Chainlink ACE and vLEI are credited by reference, never copied.

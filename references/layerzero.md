@@ -24,3 +24,10 @@ already deployed; we never embed the non-redistributable plumbing.
   transport runs on the default testnet configuration; a destination credit against an insufficient
   reserve reverts, with no partial credit, and a refused delivery is recorded without automatic replay
   or refund.
+- Cross-chain FX corridor (EURX to SGDX): a dedicated OFT adapter pair carries EURX one-for-one; the
+  real FX happens at the arrival pivot, inside the `ArrivalComposerFX`, which swaps EURX to SGDX through
+  a calibrated Uniswap V3 pool before the gated delivery, so a non-compliant delivery leaves the pool
+  untouched. The underlying 1:1 legs stay intact. Uniswap V3 is consumed by canonical address
+  (SwapRouter02, QuoterV2, factory, position manager; see the `fx-corridor` tracker), never vendored
+  here under GPL-2.0. The corridor contracts' ABIs and the `IComplianceOFTAdapter` interface are
+  published; the pool, composer and leg addresses are read on-chain in the tracker.

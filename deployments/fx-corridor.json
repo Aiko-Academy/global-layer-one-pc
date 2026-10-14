@@ -1,0 +1,58 @@
+{
+  "corridor": "FX cross-chain EURX -> SGDX (change reel au pivot d'arrivee par Uniswap V3)",
+  "deployed": "2026-10-14",
+  "note": "OFT EURX DEDIE au corridor FX (couple d'adapters propre) ; le corridor 1:1 des traceurs 11155111.json / 421614.json reste intact. Le change se fait a la destination dans le composeur, gate par la conformite. TokenRep de demonstration, PAS de monnaie de banque centrale.",
+  "reference_fx": {
+    "pair": "EUR/SGD",
+    "sgd_per_eur": 1.4699548386,
+    "source": "snapshot USD-pivot migration 0117 (meme table que fx-spot.ts) : EUR->USD 1.1600672375 x USD->SGD 1.2671290000",
+    "measured_quote": "pool calibre fee 0,01 % : 50 EURX -> 73.490124119750509285 SGDX = 1.469802 SGD/EUR (ecart -1.04 bps = le palier)"
+  },
+  "calibration": {
+    "microstructure": "calquee EURC/USDC : pool neuf au palier 0,01 % initialise au prix de reference, liquidite CONCENTREE +/- 100 bps [-3953, -3753], fournie par les LP USUELS LP1 et LP2 (pas un self-mint deployeur)",
+    "pool_EURX_SGDX_fee100": "0x224a6c394d6B5307964E18E6A43Bb3b7984fe9AD",
+    "COMPOSER_ARBITRUM_FX_fee100": "0x6eAA1d03fb6D1E9AAC3524a88eB6BB34Beb275DF",
+    "LP1": "0x3210D96762DCb8c579057C03F4A8A5c198CABaBe",
+    "LP2": "0xd1820e080BE28D5FC639DdC7Ee8CC59366C4d1e6",
+    "superseded": {
+      "pool_fee500_fullrange_deployer": "0xa91d98A26f95bF7fF71a1A50CF2cBFeFc7F5D8c4 (prix herite 1.558, pleine plage, auto-finance : premiere demo seulement)",
+      "composer_fee500": "0xB017626c462D8e81e6512Ead7F2b30C3A1A2Fb92"
+    }
+  },
+  "source": {
+    "chainId": 11155111,
+    "explorer": "https://sepolia.etherscan.io",
+    "eid": 40161,
+    "contracts": {
+      "EURX_TokenRep": "0x9731D7b334612e71cf79D3bD37b5e94499cBa818",
+      "wEURX_PolicyWrapper": "0x3D546A7Df13581d46F3cDF6d19A19241d23Dc54a",
+      "SRC_ADAPTER_FX": "0x6f291E30A53366888F2A74673B7c4B7305c7D059",
+      "AtelierIdentityGatedPolicy": "0xFAb1730f5569FdaEAeCef4b231a5A50F80944a63",
+      "TestSeal": "0x958286a08a640cFAB82736EB9e2b6e2a83E66Db1"
+    }
+  },
+  "destination": {
+    "chainId": 421614,
+    "explorer": "https://sepolia.arbiscan.io",
+    "eid": 40231,
+    "contracts": {
+      "EURX_reception_TokenRep": "0x939731bADd5c55070f563CD0a5293e835586C91F",
+      "wEURX_reception_PolicyWrapper": "0xA9bE00A49057a1AD5Ac16a4c610dD4434260F765",
+      "RECV_ADAPTER_EUR": "0xf0d5648dbc06d78476B56b6EF124408E3ef5e189",
+      "SGDX_delivery_TokenRep": "0x48660bD73791264D1cED1b3451e313a85d58c15b",
+      "wSGDX_delivery_PolicyWrapper": "0x50Ac4aa1A067DfB22f56F61E04AC048d6Ea1f2dE",
+      "pool_EURX_SGDX": "0x224a6c394d6B5307964E18E6A43Bb3b7984fe9AD",
+      "COMPOSER_ARBITRUM_FX": "0x6eAA1d03fb6D1E9AAC3524a88eB6BB34Beb275DF",
+      "AtelierIdentityGatedPolicy": "0x9DA5cC7BCC0C0236d46004bF4e0952C09252bf20",
+      "TestSeal": "0xFAb1730f5569FdaEAeCef4b231a5A50F80944a63"
+    },
+    "uniswapV3Canonical": {
+      "UniswapV3Factory": "0x248AB79Bbb9bC29bB72f7Cd42F17e054Fc40188e",
+      "SwapRouter02": "0x101F443B4d1b059569D643917553c771E1b9663E",
+      "QuoterV2": "0x2779a0CC1c3e0E44D2542EC3e79e3864Ae93Ef0B",
+      "NonfungiblePositionManager": "0x6b2937Bde17889EDCf8fbD8dE31C3C2a70Bc4d65"
+    }
+  },
+  "lzEndpointV2": "0x6EDCE65403992e310A62460808c4b910D972f10f",
+  "pairing": "SRC_ADAPTER_FX.peers(40231) = RECV_ADAPTER_EUR ; RECV_ADAPTER_EUR.peers(40161) = SRC_ADAPTER_FX (verifie on-chain)"
+}

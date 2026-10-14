@@ -25,7 +25,7 @@ const TRACES = [['Co-', 'Authored-', 'By'].join(''), ['Clau', 'de'].join(''),
 // qui explique la politique (une doc a le droit de nommer BUSL pour dire qu'on l'exclut).
 const SPDX_INTERDIT = new RegExp('SPDX-License-Identifier:\\s*(BUSL-1\\.1|' + ['LZ', 'BL'].join('') + '[-\\w.]*|UNLICENSED)');
 const CADRATIN = String.fromCharCode(0x2014);
-const LICENCES_OK = new Set(['AGPL-3.0', 'GPL-3.0', 'data']);
+const LICENCES_OK = new Set(['AGPL-3.0', 'GPL-3.0', 'MIT', 'data']);
 const ZERO = '0x' + '0'.repeat(40);
 
 // 1 + 2 : MANIFEST charge, empreintes recomputees, surface = exactement les fichiers declares.

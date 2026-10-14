@@ -1,14 +1,19 @@
 {
   "source": "Aiko Academy, Programmable Compliance toolkit",
-  "source_commit": "f5a8ece3c12b5d0d864a6390cda5234675e38fc1",
-  "ecrit_le": "2026-10-13",
-  "note": "Surface d exposition redistribuable. Principe : ABI et interfaces reproductibles depuis la source par empreinte ; traceurs lus sur la chaine ; licences AGPL-3.0 ou GPL-3.0 seulement ; aucun artefact BUSL, LZBL ni UNLICENSED ; aucune trace d outil. ABI verifiees contre le bytecode deploye par le RUNBOOK (etape en ligne, RPC).",
+  "source_commit": "6c72e7fe557e9e62d8981bba889a5dac0fe5253d",
+  "ecrit_le": "2026-10-14",
+  "note": "Surface d exposition redistribuable. Principe : ABI et interfaces reproductibles depuis la source par empreinte ; traceurs lus sur la chaine ; licences AGPL-3.0, GPL-3.0 ou MIT seulement ; aucun artefact BUSL, LZBL ni UNLICENSED ; aucune trace d outil. ABI verifiees contre le bytecode deploye par le RUNBOOK (etape en ligne, RPC).",
   "licences_autorisees": [
     "AGPL-3.0",
     "GPL-3.0",
+    "MIT",
     "data"
   ],
   "fichiers": {
+    "abi/ArrivalComposerFX.json": {
+      "sha256": "5b75f98075e6fa53438f4d81df67a89bbb51930f192428b036f58415f9f69806",
+      "licence": "MIT"
+    },
     "abi/AttestationValidatorPolicy.json": {
       "sha256": "defce4fec72e1ccd925370f502314c9d5a805bfe1f2583ef99641e56d55b7349",
       "licence": "AGPL-3.0"
@@ -16,6 +21,10 @@
     "abi/ComplianceKeyRegistry.json": {
       "sha256": "dda5d3727d33b1775a839cba7c714b11df39f3ccdd3bc5b14b87445e069fe175",
       "licence": "AGPL-3.0"
+    },
+    "abi/ComplianceOFTAdapter.json": {
+      "sha256": "30428a3afd331defde1315da440776cac85b21507e4943d82a7f5349c38be9a0",
+      "licence": "MIT"
     },
     "abi/CredentialRegistry.json": {
       "sha256": "f4e7b07ebb9d5a95ef821a231dff5f0ce99606f158da97bf73d072b8ab0382ba",
@@ -57,6 +66,10 @@
       "sha256": "108b9606049291460111b0ac96b997f77bb4bab0e50f22eca200e7985f29d30e",
       "licence": "AGPL-3.0"
     },
+    "abi/PolicyWrapperOZ4.json": {
+      "sha256": "e130fd8c6174471503ffc22a14722333874928bbc43c455cd7bb09fc9b5dc930",
+      "licence": "MIT"
+    },
     "abi/RequiredChecksPolicy.json": {
       "sha256": "649c4b082ab41fa15284bc13caa76f7d77f413e8fa0205ddfca20bc729788a24",
       "licence": "AGPL-3.0"
@@ -84,6 +97,10 @@
     "interfaces/ComplianceTypes.sol": {
       "sha256": "2770cd80b078da3abbb4b69156b2186dcc7cfa10363832d20187ca3e86eed9bd",
       "licence": "AGPL-3.0"
+    },
+    "interfaces/IComplianceOFTAdapter.sol": {
+      "sha256": "e22bb31ad9af61cac7dd2db633eed3fe5de555f622632aa6f10fd9afd79a41c9",
+      "licence": "MIT"
     },
     "interfaces/IPolicy.sol": {
       "sha256": "a935d221c7c1b95d52c32c35330957366524a1e5ed4ed07376c56495d853fc2d",
@@ -151,6 +168,10 @@
     },
     "deployments/560048-zk.json": {
       "sha256": "d94090c6008e5c66ea965eaec7c24f12a9b459e7a5f9060042a7f1bd0902991a",
+      "licence": "data"
+    },
+    "deployments/fx-corridor.json": {
+      "sha256": "b6cbf15b2c0e6ca9b231b36c7cbe3d59dc4fb4381bfe98947069714dc86eb9e9",
       "licence": "data"
     }
   }
