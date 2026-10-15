@@ -68,9 +68,44 @@ async function rpc(url, method, params) {
   } finally { clearTimeout(timer); }
 }
 
+const TRANSFER = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
+const pad = (a) => '0x' + a.toLowerCase().replace(/^0x/, '').padStart(64, '0');
+const toWei = (dec) => { const [i, f = ''] = String(dec).split('.'); return BigInt(i + f.padEnd(18, '0').slice(0, 18)); };
+// ERC-20 Transfer events only (three topics); ERC-721 shares the signature with four.
+const transfers = (rcpt) => rcpt.logs.filter((g) => g.topics[0] === TRANSFER && g.topics.length === 3);
+const T = (tracker.source && tracker.source.contracts) || {};
+const D = (tracker.destination && tracker.destination.contracts) || {};
+
+// Business assertions read from the receipt logs, with every expected value taken from the tracker
+// (nothing is typed here). Returns a list of [ok, text]. The EVM status alone proves nothing for the
+// refused pass, whose arrival transaction succeeds: its proof is the absence of token movement.
+function assertions(p, l, rcpt) {
+  const out = [];
+  const tr = transfers(rcpt);
+  const fi = p.parties && p.parties.originatingFI && p.parties.originatingFI.address;
+  const ben = p.parties && p.parties.beneficiaryFI && p.parties.beneficiaryFI.address;
+  if (l.phase === 'lock') {
+    const w = (T.wEURX_PolicyWrapper || '').toLowerCase();
+    const adapter = (T.SRC_ADAPTER_FX || '').toLowerCase();
+    const hit = tr.find((g) => g.address.toLowerCase() === w && g.topics[1] === pad(fi) && g.topics[2] === pad(adapter));
+    out.push([!!hit, hit ? `wEURX moved from the originating FI to the source adapter: ${Number(BigInt(hit.data)) / 1e18}` : 'no wEURX transfer from the originating FI to the source adapter']);
+  } else if (p.outcome === 'settled') {
+    const w = (D.wSGDX_delivery_PolicyWrapper || '').toLowerCase();
+    const want = toWei(p.beneficiary_delta_sgdx);
+    const hit = tr.find((g) => g.address.toLowerCase() === w && g.topics[2] === pad(ben) && BigInt(g.data) === want);
+    out.push([!!hit, hit ? `wSGDX delivered to the beneficiary FI, exactly ${p.beneficiary_delta_sgdx} (matches the tracker)` : `no wSGDX transfer of exactly ${p.beneficiary_delta_sgdx} to the beneficiary FI`]);
+    const pool = (D.pool_EURX_SGDX || '').toLowerCase();
+    const swapped = tr.some((g) => g.topics[1] === pad(pool)) && tr.some((g) => g.topics[2] === pad(pool));
+    out.push([swapped, swapped ? 'pool paid out and received tokens in this transaction (the swap)' : 'the pool does not appear on both sides of a transfer']);
+  } else {
+    out.push([tr.length === 0, tr.length === 0 ? `0 token Transfer events: pool and beneficiary cannot have moved (${rcpt.logs.length} other events)` : `${tr.length} token Transfer events found in a refusal`]);
+  }
+  return out;
+}
+
 // Returns 'ok' (receipt confirmed), 'bad' (chain does not confirm the tx the surface claims), or
 // 'down' (RPC unreachable: a local network problem, not a defect of the surface).
-async function leg(l) {
+async function leg(l, p) {
   const c = CHAINS[l.chainId];
   const link = c ? `${c.explorer}/tx/${l.tx}` : `(chain ${l.chainId})`;
   if (!c) { console.log(`    [${l.phase}] chain ${l.chainId} is not in the registry`); return 'bad'; }
@@ -89,7 +124,13 @@ async function leg(l) {
     console.log(`        to ${rcpt.to || '(contract creation)'}${named ? `  (corridor: ${named})` : ''}`);
     console.log(`        ${l.what}`);
     console.log(`        ${link}`);
-    return ok ? 'ok' : 'bad';
+    let sound = ok;
+    for (const [good, text] of ok ? assertions(p, l, rcpt) : []) {
+      console.log(`        ${good ? 'check ok ' : 'CHECK FAILED'}  ${text}`);
+      if (!good) sound = false;
+    }
+    if (ok && !named) console.log('        (target not named in the tracker: the LayerZero delivery path; the corridor is proven by the checks above)');
+    return sound ? 'ok' : 'bad';
   } catch (e) {
     console.log(`    [${l.phase}] ${c.name}: RPC unreachable (${String(e.message).slice(0, 60)}); explorer link stands`);
     console.log(`        ${link}`);
@@ -109,7 +150,7 @@ async function pass(title, p) {
   if (p.reason) console.log(`  reason: ${p.reason}`);
   console.log(`  beneficiary delta: +${p.beneficiary_delta_sgdx} SGDX`);
   const states = [];
-  for (const l of p.legs) states.push(await leg(l));
+  for (const l of p.legs) states.push(await leg(l, p));
   return states;
 }
 
