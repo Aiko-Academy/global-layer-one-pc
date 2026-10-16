@@ -41,9 +41,57 @@
         "name": "_poolFee",
         "type": "uint24",
         "internalType": "uint24"
+      },
+      {
+        "name": "_pivot",
+        "type": "tuple",
+        "internalType": "struct ArrivalComposerFX.PivotConfig",
+        "components": [
+          {
+            "name": "usd",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "feeEurUsd",
+            "type": "uint24",
+            "internalType": "uint24"
+          },
+          {
+            "name": "feeUsdSgd",
+            "type": "uint24",
+            "internalType": "uint24"
+          }
+        ]
       }
     ],
     "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "ROUTE_DIRECT",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint8",
+        "internalType": "uint8"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "ROUTE_USD_PIVOT",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint8",
+        "internalType": "uint8"
+      }
+    ],
+    "stateMutability": "view"
   },
   {
     "type": "function",
@@ -89,6 +137,40 @@
   },
   {
     "type": "function",
+    "name": "composePayloadForRoute",
+    "inputs": [
+      {
+        "name": "beneficiary",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "minOut",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "route",
+        "type": "uint8",
+        "internalType": "uint8"
+      },
+      {
+        "name": "attestation",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "stateMutability": "pure"
+  },
+  {
+    "type": "function",
     "name": "endpoint",
     "inputs": [],
     "outputs": [
@@ -109,6 +191,32 @@
         "name": "",
         "type": "address",
         "internalType": "contract IERC20"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "feeEurUsd",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint24",
+        "internalType": "uint24"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "feeUsdSgd",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint24",
+        "internalType": "uint24"
       }
     ],
     "stateMutability": "view"
@@ -203,22 +311,12 @@
     "name": "swapAndDeliver",
     "inputs": [
       {
-        "name": "beneficiary",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
         "name": "amountInEur",
         "type": "uint256",
         "internalType": "uint256"
       },
       {
-        "name": "minOut",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "attestation",
+        "name": "payload",
         "type": "bytes",
         "internalType": "bytes"
       }
@@ -231,6 +329,19 @@
       }
     ],
     "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "usdToken",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "contract IERC20"
+      }
+    ],
+    "stateMutability": "view"
   },
   {
     "type": "function",
@@ -340,5 +451,21 @@
     "type": "error",
     "name": "OnlySelf",
     "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "PivotDisabled",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "UnknownRoute",
+    "inputs": [
+      {
+        "name": "route",
+        "type": "uint8",
+        "internalType": "uint8"
+      }
+    ]
   }
 ]

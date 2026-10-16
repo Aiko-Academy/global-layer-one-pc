@@ -11,12 +11,17 @@
   "calibration": {
     "microstructure": "calquee EURC/USDC : pool neuf au palier 0,01 % initialise au prix de reference, liquidite CONCENTREE +/- 100 bps [-3953, -3753], fournie par les LP USUELS LP1 et LP2 (pas un self-mint deployeur)",
     "pool_EURX_SGDX_fee100": "0x224a6c394d6B5307964E18E6A43Bb3b7984fe9AD",
-    "COMPOSER_ARBITRUM_FX_fee100": "0x6eAA1d03fb6D1E9AAC3524a88eB6BB34Beb275DF",
+    "COMPOSER_ARBITRUM_FX_fee100": "0xd10E2bE83F8dAEb25d568E8f850Ec95222DE5511",
     "LP1": "0x3210D96762DCb8c579057C03F4A8A5c198CABaBe",
     "LP2": "0xd1820e080BE28D5FC639DdC7Ee8CC59366C4d1e6",
     "superseded": {
       "pool_fee500_fullrange_deployer": "0xa91d98A26f95bF7fF71a1A50CF2cBFeFc7F5D8c4 (prix herite 1.558, pleine plage, auto-finance : premiere demo seulement)",
       "composer_fee500": "0xB017626c462D8e81e6512Ead7F2b30C3A1A2Fb92"
+    },
+    "pivot_pools": {
+      "note": "route 1 (USD pivot): EURX/USDX and SGDX/USDX pools at the 0.01% tier, concentrated +/-100 bps, liquidity from the two usual LPs, at the USD-pivot reference price. USDX is a demonstration base token with no wrapper: it exists only inside the router call and the composer never holds it.",
+      "EUR_USD": 1.1600672375,
+      "USD_SGD": 1.267129
     }
   },
   "source": {
@@ -42,9 +47,13 @@
       "SGDX_delivery_TokenRep": "0x48660bD73791264D1cED1b3451e313a85d58c15b",
       "wSGDX_delivery_PolicyWrapper": "0x50Ac4aa1A067DfB22f56F61E04AC048d6Ea1f2dE",
       "pool_EURX_SGDX": "0x224a6c394d6B5307964E18E6A43Bb3b7984fe9AD",
-      "COMPOSER_ARBITRUM_FX": "0x6eAA1d03fb6D1E9AAC3524a88eB6BB34Beb275DF",
+      "COMPOSER_ARBITRUM_FX": "0xd10E2bE83F8dAEb25d568E8f850Ec95222DE5511",
       "AtelierIdentityGatedPolicy": "0x9DA5cC7BCC0C0236d46004bF4e0952C09252bf20",
-      "TestSeal": "0xFAb1730f5569FdaEAeCef4b231a5A50F80944a63"
+      "TestSeal": "0xFAb1730f5569FdaEAeCef4b231a5A50F80944a63",
+      "COMPOSER_ARBITRUM_FX_single_route": "0x6eAA1d03fb6D1E9AAC3524a88eB6BB34Beb275DF",
+      "USDX_pivot_TokenRep": "0xb8d6E96387e099f91CD972d9fDEb16F804A45ac0",
+      "pool_EURX_USDX": "0x179F7c1d4B351303f487A86340B0911ACd41A0c3",
+      "pool_SGDX_USDX": "0x3D7C07FA75E7FdD5d9b019Ad45102e0f11B5D9d9"
     },
     "uniswapV3Canonical": {
       "UniswapV3Factory": "0x248AB79Bbb9bC29bB72f7Cd42F17e054Fc40188e",
@@ -119,6 +128,39 @@
           "what": "gated delivery refused ('IdentityGatedPolicy: beneficiary has no identity'); the swap is rolled back by the atomic call; the Uniswap V3 pool is unchanged (balances identical before and after); value kept in transit as 50 wEURX in its origin currency; BANK SG2 receives 0 SGDX; the receipt carries zero token transfers"
         }
       ]
+    },
+    "pivot": {
+      "outcome": "settled",
+      "route": 1,
+      "rate_sgd_per_eur": 1.469632025869,
+      "beneficiary_delta_sgdx": "73.481601293450141716",
+      "note": "Route 1 forced for the demonstration (at the calibrated state the direct route is better by under one basis point, so the agent would choose route 0). Pool moves read from the receipt: EURX/USDX +50 EURX and -57.997059 USDX, SGDX/USDX +57.997059 USDX and -73.481601 SGDX, direct pool unchanged, composer holds no USDX.",
+      "parties": {
+        "originatingFI": {
+          "name": "BANK FR",
+          "address": "0x7C0984484391D6cD7bFc68d12D1fD3c48f1BbB38",
+          "role": "pays EUR, identified on Ethereum Sepolia (vLEI + KYB)"
+        },
+        "beneficiaryFI": {
+          "name": "BANK SG1",
+          "address": "0xadEe31407e2AdcA6B0f25Bd039DCe047B80AfAde",
+          "role": "receives SGD, identified on Arbitrum Sepolia (vLEI + KYB)"
+        }
+      },
+      "legs": [
+        {
+          "chainId": 11155111,
+          "phase": "lock",
+          "tx": "0x6704f8c7b80988c8c4b2b05e5abc10a6c41ff3ce5a9b20aba7596d6dc949d789",
+          "what": "50 EURX locked at source by BANK FR; message verified by the pinned LayerZero Labs DVN (LayerZero Scan: DELIVERED)"
+        },
+        {
+          "chainId": 421614,
+          "phase": "swap+deliver",
+          "tx": "0x15ff29bdaac9fcd393a66b00ca784660ffc23d56d5d37828f966469c8317e5ce",
+          "what": "atomic lzCompose on route 1: swap 50 EURX to USDX to 73.481601 SGDX through the two pivot pools, then gated delivery to BANK SG1 (vLEI verified); the composer keeps nothing"
+        }
+      ]
     }
   },
   "earlier_passes_default_wiring": {
@@ -180,7 +222,29 @@
       "enforcedOptions": {
         "SEND": "0x0003010011010000000000000000000000000007a120",
         "SEND_AND_CALL": "0x"
-      }
+      },
+      "composers": [
+        "0xd10E2bE83F8dAEb25d568E8f850Ec95222DE5511",
+        "0x6eAA1d03fb6D1E9AAC3524a88eB6BB34Beb275DF"
+      ]
+    }
+  },
+  "routes": {
+    "note": "The arrival composer knows two exchange routes, FIXED in the contract. The compose payload is beneficiary(20) ++ minOut(32) ++ route(1) ++ attestation. A read-only route agent quotes both routes on the chain and picks the higher SGDX output (tie: direct); the contract only accepts a route identifier, and minOut applies to the final SGDX, so a wrong choice can only make the whole call fail. All three pools hold base tokens, never wrappers; compliance applies to the transfer of the wrapped SGDX.",
+    "composer": "0xd10E2bE83F8dAEb25d568E8f850Ec95222DE5511",
+    "single_route_composer_used_by_the_first_passes": "0x6eAA1d03fb6D1E9AAC3524a88eB6BB34Beb275DF",
+    "route_0": {
+      "path": "EURX to SGDX",
+      "pools": [
+        "0x224a6c394d6B5307964E18E6A43Bb3b7984fe9AD"
+      ]
+    },
+    "route_1": {
+      "path": "EURX to USDX to SGDX",
+      "pools": [
+        "0x179F7c1d4B351303f487A86340B0911ACd41A0c3",
+        "0x3D7C07FA75E7FdD5d9b019Ad45102e0f11B5D9d9"
+      ]
     }
   }
 }

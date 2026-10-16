@@ -94,9 +94,24 @@ function assertions(p, l, rcpt) {
     const want = toWei(p.beneficiary_delta_sgdx);
     const hit = tr.find((g) => g.address.toLowerCase() === w && g.topics[2] === pad(ben) && BigInt(g.data) === want);
     out.push([!!hit, hit ? `wSGDX delivered to the beneficiary FI, exactly ${p.beneficiary_delta_sgdx} (matches the tracker)` : `no wSGDX transfer of exactly ${p.beneficiary_delta_sgdx} to the beneficiary FI`]);
-    const pool = (D.pool_EURX_SGDX || '').toLowerCase();
-    const swapped = tr.some((g) => g.topics[1] === pad(pool)) && tr.some((g) => g.topics[2] === pad(pool));
-    out.push([swapped, swapped ? 'pool paid out and received tokens in this transaction (the swap)' : 'the pool does not appear on both sides of a transfer']);
+    // Route 0 swaps in the direct pool; route 1 swaps through the two USDX pivot pools, and the composer
+    // must never hold USDX (it exists only inside the router call).
+    const pools = (p.route === 1 ? [D.pool_EURX_USDX, D.pool_SGDX_USDX] : [D.pool_EURX_SGDX]).map((a) => (a || '').toLowerCase());
+    for (const pool of pools) {
+      const swapped = tr.some((g) => g.topics[1] === pad(pool)) && tr.some((g) => g.topics[2] === pad(pool));
+      out.push([swapped, swapped ? `pool ${pool.slice(0, 8)}... paid out and received tokens in this transaction (the swap)` : `pool ${pool.slice(0, 8)}... does not appear on both sides of a transfer`]);
+    }
+    if (p.route === 1) {
+      const usdx = (D.USDX_pivot_TokenRep || '').toLowerCase();
+      const comp = pad(D.COMPOSER_ARBITRUM_FX || '');
+      const held = tr.filter((g) => g.address.toLowerCase() === usdx && (g.topics[1] === comp || g.topics[2] === comp));
+      out.push([held.length === 0, held.length === 0 ? 'the composer never holds USDX (0 transfers of it to or from the composer)' : `the composer touched USDX in ${held.length} transfer(s)`]);
+    }
+    const direct = (D.pool_EURX_SGDX || '').toLowerCase();
+    if (p.route === 1) {
+      const touched = tr.some((g) => g.topics[1] === pad(direct) || g.topics[2] === pad(direct));
+      out.push([!touched, !touched ? 'the direct pool did not move on route 1' : 'the direct pool moved on route 1']);
+    }
   } else {
     out.push([tr.length === 0, tr.length === 0 ? `0 token Transfer events: pool and beneficiary cannot have moved (${rcpt.logs.length} other events)` : `${tr.length} token Transfer events found in a refusal`]);
   }
@@ -167,6 +182,7 @@ if (dp.note) console.log(`\n${dp.note}`);
 const states = [
   ...(await pass('conforming pass', dp.conforming)),
   ...(await pass('refused pass', dp.refused)),
+  ...(dp.pivot ? await pass('pivot pass (route 1)', dp.pivot) : []),
 ];
 const count = (s) => states.filter((x) => x === s).length;
 

@@ -41,7 +41,7 @@ const CHAINS = [
 const SEL = {
   peers: '0xbb0b6a53', getSendLibrary: '0xb96a277f', isDefaultSendLibrary: '0xdc93c8a2',
   getReceiveLibrary: '0x402f8468', getAppUlnConfig: '0x39e3f938', executorConfigs: '0x4d963200',
-  enforcedOptions: '0x5535d461', eid: '0x416ecebf', owner: '0x8da5cb5b', delegates: '0x587cde1e',
+  enforcedOptions: '0x5535d461', composers: '0x99b06189', eid: '0x416ecebf', owner: '0x8da5cb5b', delegates: '0x587cde1e',
 };
 
 const word = (hex) => hex.replace(/^0x/, '').toLowerCase().padStart(64, '0');
@@ -120,6 +120,11 @@ for (const c of CHAINS) {
 
     const ex = words(await ethCall(c.rpc, p.sendLibrary, SEL.executorConfigs + word(adapter) + num(p.remoteEid)));
     say(Number(BigInt('0x' + ex[0])) === p.maxMessageSize && lc(addrOf(ex[1])) === lc(p.executor), `executor ${p.executor}, max message ${p.maxMessageSize} bytes`);
+
+    for (const comp of p.composers || []) {
+      const reg = BigInt('0x' + words(await ethCall(c.rpc, adapter, SEL.composers + word(comp)))[0]) === 1n;
+      say(reg, `composer ${comp} is registered on the arrival adapter`);
+    }
 
     for (const [label, type] of [['SEND', 1], ['SEND_AND_CALL', 2]]) {
       const got = decodeBytes(await ethCall(c.rpc, adapter, SEL.enforcedOptions + num(p.remoteEid) + num(type)));

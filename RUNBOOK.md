@@ -69,6 +69,19 @@ and `--rpc-arbitrum` if you prefer the public endpoints not be used). Both arriv
 EVM status success; the refusal is semantic, so the proof of refusal is the pair beneficiary receives 0
 SGDX and the pool is unchanged, not a reverted transaction.
 
+### Two exchange routes at arrival
+
+The arrival composer (`COMPOSER_ARBITRUM_FX` in `deployments/fx-corridor.json`) knows two routes, fixed in the
+contract: route 0 swaps EURX to SGDX in the direct pool, route 1 swaps EURX to USDX to SGDX through two pivot
+pools. The compose payload carries the route as one byte. A read-only agent quotes both routes on the chain and
+picks the higher SGDX output; the contract only accepts a route identifier, and the floor `minOut` applies to
+the final SGDX, so a wrong choice can only make the whole call fail. All pools hold base tokens (EURX, USDX,
+SGDX), never wrappers. USDX is a demonstration base token with no wrapper: it exists only inside the router
+call, and compliance applies to the transfer of the wrapped SGDX. The first two passes used the earlier
+single-route composer (`COMPOSER_ARBITRUM_FX_single_route`), which stays registered on the arrival adapter.
+`scripts/demo/corridor-fx-e2e.mjs` replays the route 1 pass (`demonstration_passes.pivot`) and checks that both
+pivot pools moved, that the direct pool did not, and that the composer never held USDX.
+
 ### Checking the pinned LayerZero pathway
 
 Since 2026-10-16 the pathway of the FX corridor is set by the application on both chains: explicit send and

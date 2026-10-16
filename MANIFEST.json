@@ -1,6 +1,6 @@
 {
   "source": "Aiko Academy, Programmable Compliance toolkit",
-  "source_commit": "a731bc796a22c61574e4555060a55d9a44fb55b0",
+  "source_commit": "92743f3f37a7660cb4a3250b077af54e6ea95712",
   "ecrit_le": "2026-10-16",
   "note": "Surface d exposition redistribuable. Principe : ABI et interfaces reproductibles depuis la source par empreinte ; traceurs lus sur la chaine ; licences AGPL-3.0, GPL-3.0 ou MIT seulement ; aucun artefact BUSL, LZBL ni UNLICENSED ; aucune trace d outil. ABI verifiees contre le bytecode deploye par le RUNBOOK (etape en ligne, RPC).",
   "licences_autorisees": [
@@ -11,7 +11,7 @@
   ],
   "fichiers": {
     "abi/ArrivalComposerFX.json": {
-      "sha256": "5b75f98075e6fa53438f4d81df67a89bbb51930f192428b036f58415f9f69806",
+      "sha256": "5fc543af8776d7b39126a21ce6502b2d319aea052bb639b76a3349effb2b7409",
       "licence": "MIT"
     },
     "abi/AttestationValidatorPolicy.json": {
@@ -171,7 +171,7 @@
       "licence": "data"
     },
     "deployments/fx-corridor.json": {
-      "sha256": "f2735ae76afbe959b8da239550a040983891f45dff9db4b16ac308be23c5c431",
+      "sha256": "4325484292cd86084eb09d74012421e5b289055806a5ab1434b3e1fef5f5d708",
       "licence": "data"
     }
   }
