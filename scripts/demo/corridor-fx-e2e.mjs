@@ -47,7 +47,7 @@ const CHAINS = {
 // named corridor contract rather than trusted blind.
 const known = new Map();
 (function walk(v, path) {
-  if (typeof v === 'string') { if (/^0x[0-9a-fA-F]{40}$/.test(v)) known.set(v.toLowerCase(), path); return; }
+  if (typeof v === 'string') { if (/^0x[0-9a-fA-F]{40}$/.test(v) && !known.has(v.toLowerCase())) known.set(v.toLowerCase(), path); return; }
   if (Array.isArray(v)) { v.forEach((x, i) => walk(x, `${path}[${i}]`)); return; }
   if (v && typeof v === 'object') { for (const [k, x] of Object.entries(v)) walk(x, path ? `${path}.${k}` : k); }
 })(tracker, '');

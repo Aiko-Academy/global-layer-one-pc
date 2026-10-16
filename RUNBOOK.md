@@ -69,6 +69,22 @@ and `--rpc-arbitrum` if you prefer the public endpoints not be used). Both arriv
 EVM status success; the refusal is semantic, so the proof of refusal is the pair beneficiary receives 0
 SGDX and the pool is unchanged, not a reverted transaction.
 
+### Checking the pinned LayerZero pathway
+
+Since 2026-10-16 the pathway of the FX corridor is set by the application on both chains: explicit send and
+receive libraries, ULN config (2 confirmations, one required DVN), executor, and enforced gas options. Before,
+only the peer was set and everything else ran on the LayerZero defaults. The expected values are in
+`deployments/fx-corridor.json`, under `wiring`. To read them back from the chains:
+
+```
+node scripts/demo/wiring-check.mjs
+```
+
+It reads the raw values set by the application (not the merged effective value, which cannot tell a pinned
+setting from an inherited one), prints one line per check, and exits with code 1 if any check differs or if an
+RPC does not answer. It is read only and has no dependency. The script that sets these values is
+`scripts/wiring/WireLZ.s.sol` (see `scripts/wiring/README.md`).
+
 ## 3. On-chain, bytecode against source (participant holding the toolkit)
 
 The strongest check compares the runtime bytecode deployed at each address to the bytecode compiled
