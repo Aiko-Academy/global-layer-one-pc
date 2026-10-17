@@ -11,7 +11,7 @@
   "calibration": {
     "microstructure": "calquee EURC/USDC : pool neuf au palier 0,01 % initialise au prix de reference, liquidite CONCENTREE +/- 100 bps [-3953, -3753], fournie par les LP USUELS LP1 et LP2 (pas un self-mint deployeur)",
     "pool_EURX_SGDX_fee100": "0x224a6c394d6B5307964E18E6A43Bb3b7984fe9AD",
-    "COMPOSER_ARBITRUM_FX_fee100": "0xd10E2bE83F8dAEb25d568E8f850Ec95222DE5511",
+    "COMPOSER_ARBITRUM_FX_fee100": "0x6fC68FcA0f9FcAe4fCd3D2C36b5D05323EeF85f4",
     "LP1": "0x3210D96762DCb8c579057C03F4A8A5c198CABaBe",
     "LP2": "0xd1820e080BE28D5FC639DdC7Ee8CC59366C4d1e6",
     "superseded": {
@@ -34,7 +34,8 @@
       "SRC_ADAPTER_FX": "0x6f291E30A53366888F2A74673B7c4B7305c7D059",
       "AtelierIdentityGatedPolicy": "0xFAb1730f5569FdaEAeCef4b231a5A50F80944a63",
       "TestSeal": "0x958286a08a640cFAB82736EB9e2b6e2a83E66Db1",
-      "RETURN_RECEIVER": "0x4e6d56d8f40B06fE3dF48B271328Cbed1aeBF983"
+      "RETURN_RECEIVER": "0xeCD17DCe61F0d62452a8add68241b093E1b243fb",
+      "RETURN_RECEIVER_v3_unregistered": "0x4e6d56d8f40B06fE3dF48B271328Cbed1aeBF983"
     }
   },
   "destination": {
@@ -48,7 +49,8 @@
       "SGDX_delivery_TokenRep": "0x48660bD73791264D1cED1b3451e313a85d58c15b",
       "wSGDX_delivery_PolicyWrapper": "0x50Ac4aa1A067DfB22f56F61E04AC048d6Ea1f2dE",
       "pool_EURX_SGDX": "0x224a6c394d6B5307964E18E6A43Bb3b7984fe9AD",
-      "COMPOSER_ARBITRUM_FX": "0xe3A33643Eef095FB9894b2A7C600C5005cB392fa",
+      "COMPOSER_ARBITRUM_FX": "0x6fC68FcA0f9FcAe4fCd3D2C36b5D05323EeF85f4",
+      "COMPOSER_ARBITRUM_FX_v3_return_path": "0xe3A33643Eef095FB9894b2A7C600C5005cB392fa",
       "AtelierIdentityGatedPolicy": "0x9DA5cC7BCC0C0236d46004bF4e0952C09252bf20",
       "TestSeal": "0xFAb1730f5569FdaEAeCef4b231a5A50F80944a63",
       "COMPOSER_ARBITRUM_FX_single_route": "0x6eAA1d03fb6D1E9AAC3524a88eB6BB34Beb275DF",
@@ -249,9 +251,16 @@
         "SEND_AND_CALL": "0x0003010011010000000000000000000000000007a1200100130300000000000000000000000000000044aa20"
       },
       "composers": [
-        "0x4e6d56d8f40B06fE3dF48B271328Cbed1aeBF983"
+        "0xeCD17DCe61F0d62452a8add68241b093E1b243fb"
       ],
-      "composersFromBlock": 11800000
+      "composersFromBlock": 11935064,
+      "composersRetired": {
+        "on": "2026-10-17",
+        "composers": [
+          "0x4e6d56d8f40B06fE3dF48B271328Cbed1aeBF983"
+        ],
+        "note": "the return receiver bound to the v3 composer, unregistered by setComposer(false) and removed from the identity gate exemptions once the v4 composer and its own receiver were in service"
+      }
     },
     "destination": {
       "chainId": 421614,
@@ -276,23 +285,43 @@
         "SEND_AND_CALL": "0x"
       },
       "composers": [
-        "0xe3A33643Eef095FB9894b2A7C600C5005cB392fa"
+        "0x6fC68FcA0f9FcAe4fCd3D2C36b5D05323EeF85f4"
       ],
-      "composersFromBlock": 319000000,
+      "composersFromBlock": 320119792,
       "composersRetired": {
         "on": "2026-10-17",
         "composers": [
           "0xd10E2bE83F8dAEb25d568E8f850Ec95222DE5511",
           "0x6eAA1d03fB6D1E9AAC3524a88eB6BB34Beb275DF",
-          "0xB017626c462D8e81e6512Ead7F2b30C3A1A2Fb92"
+          "0xB017626c462D8e81e6512Ead7F2b30C3A1A2Fb92",
+          "0xe3A33643Eef095FB9894b2A7C600C5005cB392fa"
         ],
-        "note": "unregistered by setComposer(false) after the return path replaced them; the wEURX they already held has no way out, their code has no approve or transfer"
+        "note": "unregistered by setComposer(false) once a newer composer replaced them (the first three on 2026-10-17 at 15:10 UTC, the v3 return-path composer at 16:46 UTC); the wEURX the first three already held has no way out, their code has no approve or transfer. The v3 composer held no wEURX when it was unregistered: its two refused amounts had been returned to the source."
       }
     }
   },
+  "zk": {
+    "source": {
+      "chainId": 11155111,
+      "ZkCheckRegistry": "0x82A9062DE85432652FBdDC2E023e4b7d561a840F",
+      "SanctionsGroth16Verifier": "0xb4B1e7bd8A0A5023c5B88eAB0C27F249bF7ffC13",
+      "SanctionsAdapter": "0x1AF6F7BCFA70451E2695b85FEc82149397d759AF",
+      "HolderKycGroth16Verifier": "0x4b6dF6fEA328Fe83Bd5B58D9209Dd66f207d162C",
+      "HolderKycAdapter": "0x34Fa7DA47244014c110FaEa73699B7A70aB0108e"
+    },
+    "destination": {
+      "chainId": 421614,
+      "ZkCheckRegistry": "0x486b374C51fAEe2FcA9f8A7c29A41C09cb4993a0",
+      "SanctionsGroth16Verifier": "0x04B756cd2Bd433f75b0D099fE7B62358ADf448c1",
+      "SanctionsAdapter": "0xE189F54aB553665ad7041877CF7e7164b5e0116b",
+      "HolderKycGroth16Verifier": "0x00C2266243744790C31532fB1fff1C9b1502c46f",
+      "HolderKycAdapter": "0x117b1cBEe8e3e262014b49fAC6A321e1B322c29b"
+    },
+    "status": "Verifiers and registries are deployed on both testnets and read back on-chain (verifierOf of the two codes) on 2026-10-17. NO live proof: no prover exists in this repository, the corridor keeps running on signed attestations."
+  },
   "routes": {
-    "note": "The arrival composer knows two exchange routes, FIXED in the contract. The compose payload is beneficiary(20) ++ minOut(32) ++ route(1) ++ attestation. A read-only route agent quotes both routes on the chain and picks the higher SGDX output (tie: direct); the contract only accepts a route identifier, and minOut applies to the final SGDX, so a wrong choice can only make the whole call fail. All three pools hold base tokens, never wrappers; compliance applies to the transfer of the wrapped SGDX.",
-    "composer": "0xd10E2bE83F8dAEb25d568E8f850Ec95222DE5511",
+    "note": "The arrival composer knows two exchange routes, FIXED in the contract. The compose payload is beneficiary(20) ++ minOut(32) ++ route(1) ++ attestedOut(32) ++ attestation. attestedOut is the SGDX amount the quote attested; the composer delivers EXACTLY attestedOut to the beneficiary, keeps any surplus the swap produced above it, and the operator can sweep that surplus to a sink fixed at construction. A read-only route agent quotes both routes on the chain and picks the higher SGDX output (tie: direct); the contract only accepts a route identifier, and minOut applies to the final SGDX, so a wrong choice can only make the whole call fail. All three pools hold base tokens, never wrappers; compliance applies to the transfer of the wrapped SGDX.",
+    "composer": "0x6fC68FcA0f9FcAe4fCd3D2C36b5D05323EeF85f4",
     "single_route_composer_used_by_the_first_passes": "0x6eAA1d03fb6D1E9AAC3524a88eB6BB34Beb275DF",
     "route_0": {
       "path": "EURX to SGDX",

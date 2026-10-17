@@ -73,7 +73,7 @@ SGDX and the pool is unchanged, not a reverted transaction.
 
 The arrival composer (`COMPOSER_ARBITRUM_FX` in `deployments/fx-corridor.json`) knows two routes, fixed in the
 contract: route 0 swaps EURX to SGDX in the direct pool, route 1 swaps EURX to USDX to SGDX through two pivot
-pools. The compose payload carries the route as one byte. A read-only agent quotes both routes on the chain and
+pools. The compose payload is `beneficiary(20) ++ minOut(32) ++ route(1) ++ attestedOut(32) ++ attestation`: the composer delivers exactly `attestedOut` and keeps any surplus, which the operator can sweep to a sink fixed at construction. A read-only agent quotes both routes on the chain and
 picks the higher SGDX output; the contract only accepts a route identifier, and the floor `minOut` applies to
 the final SGDX, so a wrong choice can only make the whole call fail. All pools hold base tokens (EURX, USDX,
 SGDX), never wrappers. USDX is a demonstration base token with no wrapper: it exists only inside the router
@@ -92,7 +92,7 @@ node scripts/demo/route-agent.mjs [--amount 50] [--tol-bps 30]
 
 It checks on the chain that the three tokens of the paths and the three pools are base tokens (it refuses
 if one is a wrapper), quotes both routes with the QuoterV2, and prints the choice with its reason, then a
-`GL1_FX_ROUTE={...}` line (route, converted amount, floor `minOut`). At the calibrated state the direct
+`GL1_FX_ROUTE={...}` line (route, attested output `attestedOut`, floor `minOut`). At the calibrated state the direct
 route wins by a fraction of a basis point: both routes start from the same USD-pivot reference, and the
 pivot pays one more fee. The choice only flips when a pool is unbalanced.
 
