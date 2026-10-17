@@ -276,12 +276,18 @@
         "SEND_AND_CALL": "0x"
       },
       "composers": [
-        "0xe3A33643Eef095FB9894b2A7C600C5005cB392fa",
-        "0xd10E2bE83F8dAEb25d568E8f850Ec95222DE5511",
-        "0x6eAA1d03fb6D1E9AAC3524a88eB6BB34Beb275DF",
-        "0xB017626c462D8e81e6512Ead7F2b30C3A1A2Fb92"
+        "0xe3A33643Eef095FB9894b2A7C600C5005cB392fa"
       ],
-      "composersFromBlock": 319000000
+      "composersFromBlock": 319000000,
+      "composersRetired": {
+        "on": "2026-10-17",
+        "composers": [
+          "0xd10E2bE83F8dAEb25d568E8f850Ec95222DE5511",
+          "0x6eAA1d03fB6D1E9AAC3524a88eB6BB34Beb275DF",
+          "0xB017626c462D8e81e6512Ead7F2b30C3A1A2Fb92"
+        ],
+        "note": "unregistered by setComposer(false) after the return path replaced them; the wEURX they already held has no way out, their code has no approve or transfer"
+      }
     }
   },
   "routes": {

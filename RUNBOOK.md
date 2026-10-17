@@ -79,7 +79,7 @@ the final SGDX, so a wrong choice can only make the whole call fail. All pools h
 SGDX), never wrappers. USDX is a demonstration base token with no wrapper: it exists only inside the router
 call, and compliance applies to the transfer of the wrapped SGDX. The first two passes used the earlier
 single-route composer (`COMPOSER_ARBITRUM_FX_single_route`), and the pivot pass the two-route composer
-(`COMPOSER_ARBITRUM_FX_two_routes_v2`); both stay registered on the arrival adapter, as does the very first composer
+(`COMPOSER_ARBITRUM_FX_two_routes_v2`); both were unregistered from the arrival adapter on 2026-10-17, as was the very first composer
 (`COMPOSER_ARBITRUM_FX_first_composer`).
 `scripts/demo/corridor-fx-e2e.mjs` replays the route 1 pass (`demonstration_passes.pivot`) and checks that both
 pivot pools moved, that the direct pool did not, and that the composer never held USDX.
