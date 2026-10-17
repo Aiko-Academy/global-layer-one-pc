@@ -19,7 +19,9 @@
 //
 // Read only. No build, no private key, no dependency: Node 18+ and JSON-RPC over fetch.
 //
-//   node scripts/demo/route-agent.mjs [--amount 50] [--tol-bps 30] [--rpc-arbitrum <url>]
+//   node scripts/demo/route-agent.mjs [--amount 50] [--tol-bps 30] [--rpc-arbitrum <url>] [--block <n>]
+//
+// `--block <n>` quotes at that block instead of the latest one (two readers of the same block must agree to the wei).
 //
 // The last line is GL1_FX_ROUTE=<json>: route, convertAmount and minOut of the chosen route, the values
 // the sender puts in the compose payload and the destination attestation.
@@ -33,6 +35,8 @@ const argv = process.argv.slice(2);
 const opt = (name, def) => { const i = argv.indexOf(name); return i >= 0 ? argv[i + 1] : def; };
 const RPC = opt('--rpc-arbitrum', 'https://arbitrum-sepolia-rpc.publicnode.com');
 const TOL_BPS = BigInt(opt('--tol-bps', '30'));
+const BLOCK = opt('--block', null);
+const TAG = BLOCK === null ? 'latest' : '0x' + BigInt(BLOCK).toString(16);
 const FEE = 100n; // all three pools sit at the 0.01% tier (deployments/fx-corridor.json, calibration)
 
 const tr = JSON.parse(readFileSync(join(ROOT, 'deployments', 'fx-corridor.json'), 'utf8'));
@@ -55,7 +59,7 @@ let id = 0;
 async function ethCall(to, data) {
   const res = await fetch(RPC, {
     method: 'POST', headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ jsonrpc: '2.0', id: ++id, method: 'eth_call', params: [{ to, data }, 'latest'] }),
+    body: JSON.stringify({ jsonrpc: '2.0', id: ++id, method: 'eth_call', params: [{ to, data }, TAG] }),
   });
   const j = await res.json();
   if (j.error) { const e = new Error(j.error.message); e.revert = true; throw e; }

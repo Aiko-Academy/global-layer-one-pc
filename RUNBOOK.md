@@ -78,7 +78,9 @@ picks the higher SGDX output; the contract only accepts a route identifier, and 
 the final SGDX, so a wrong choice can only make the whole call fail. All pools hold base tokens (EURX, USDX,
 SGDX), never wrappers. USDX is a demonstration base token with no wrapper: it exists only inside the router
 call, and compliance applies to the transfer of the wrapped SGDX. The first two passes used the earlier
-single-route composer (`COMPOSER_ARBITRUM_FX_single_route`), which stays registered on the arrival adapter.
+single-route composer (`COMPOSER_ARBITRUM_FX_single_route`), and the pivot pass the two-route composer
+(`COMPOSER_ARBITRUM_FX_two_routes_v2`); both stay registered on the arrival adapter, as does the very first composer
+(`COMPOSER_ARBITRUM_FX_first_composer`).
 `scripts/demo/corridor-fx-e2e.mjs` replays the route 1 pass (`demonstration_passes.pivot`) and checks that both
 pivot pools moved, that the direct pool did not, and that the composer never held USDX.
 
@@ -93,6 +95,30 @@ if one is a wrapper), quotes both routes with the QuoterV2, and prints the choic
 `GL1_FX_ROUTE={...}` line (route, converted amount, floor `minOut`). At the calibrated state the direct
 route wins by a fraction of a basis point: both routes start from the same USD-pivot reference, and the
 pivot pays one more fee. The choice only flips when a pool is unbalanced.
+
+### Returning a refused amount
+
+A refused delivery used to leave the wrapped EURX with the composer and no way out. The current composer
+(`COMPOSER_ARBITRUM_FX`) records each refusal by guid, with the original payer read from the compose message, and
+`returnToSource` sends the amount back through the bridge. Only the payer or the operator can call it, once per guid:
+
+1. the composer's wEURX goes to the arrival adapter and is burned there, and the reserve gets the same amount of EURX back
+   (this transfer passes through the arrival wrapper's compliance pipeline, like every other leg);
+2. the adapter trace (`inboundComposer`, `inboundAmount`) is consumed, so a guid cannot be returned twice;
+3. on the source chain the lock is released and `RETURN_RECEIVER` hands the wEURX back to the payer by a gated transfer.
+   If the source policy refuses (for example an expired attestation), the wEURX stays with the receiver and a `pending`
+   entry is settled by `claim` with a fresh attestation: no funds sit in a compose queue.
+
+`scripts/demo/corridor-fx-e2e.mjs` replays this pass (`demonstration_passes.returned`) and checks that exactly the
+refused amount left the composer, was burned, came back to the reserve and reached the payer. Two older composers
+hold wEURX recorded before this path existed; their code has no approve or transfer, so that stock stays in place,
+backed by the wrapper's EURX.
+
+Gas on the source chain matters: a return needs `lzReceive` gas of about 920,000 (a 500,000 cap dies with an empty
+revert) and the compose step a few million; the sender script uses 1,500,000 and 6,000,000.
+
+`scripts/demo/wiring-check.mjs` now also replays the `ComposerSet` events of each adapter and requires the set of
+registered composers to equal the announced list in `deployments/fx-corridor.json`.
 
 ### Checking the pinned LayerZero pathway
 

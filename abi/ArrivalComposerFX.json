@@ -63,6 +63,23 @@
             "internalType": "uint24"
           }
         ]
+      },
+      {
+        "name": "_return",
+        "type": "tuple",
+        "internalType": "struct ArrivalComposerFX.ReturnConfig",
+        "components": [
+          {
+            "name": "returnReceiver",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "operator",
+            "type": "address",
+            "internalType": "address"
+          }
+        ]
       }
     ],
     "stateMutability": "nonpayable"
@@ -83,6 +100,45 @@
   {
     "type": "function",
     "name": "ROUTE_USD_PIVOT",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint8",
+        "internalType": "uint8"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "STATE_NONE",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint8",
+        "internalType": "uint8"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "STATE_REFUSED",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint8",
+        "internalType": "uint8"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "STATE_RETURNED",
     "inputs": [],
     "outputs": [
       {
@@ -269,6 +325,19 @@
   },
   {
     "type": "function",
+    "name": "operator",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "poolFee",
     "inputs": [],
     "outputs": [
@@ -279,6 +348,129 @@
       }
     ],
     "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "quoteReturn",
+    "inputs": [
+      {
+        "name": "guid",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "a",
+        "type": "tuple",
+        "internalType": "struct ArrivalComposerFX.ReturnArgs",
+        "components": [
+          {
+            "name": "debitAttestation",
+            "type": "bytes",
+            "internalType": "bytes"
+          },
+          {
+            "name": "creditAttestation",
+            "type": "bytes",
+            "internalType": "bytes"
+          },
+          {
+            "name": "extraOptions",
+            "type": "bytes",
+            "internalType": "bytes"
+          }
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "name": "nativeFee",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "refusals",
+    "inputs": [
+      {
+        "name": "guid",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "payer",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "srcEid",
+        "type": "uint32",
+        "internalType": "uint32"
+      },
+      {
+        "name": "state",
+        "type": "uint8",
+        "internalType": "uint8"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "returnReceiver",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "returnToSource",
+    "inputs": [
+      {
+        "name": "guid",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "a",
+        "type": "tuple",
+        "internalType": "struct ArrivalComposerFX.ReturnArgs",
+        "components": [
+          {
+            "name": "debitAttestation",
+            "type": "bytes",
+            "internalType": "bytes"
+          },
+          {
+            "name": "creditAttestation",
+            "type": "bytes",
+            "internalType": "bytes"
+          },
+          {
+            "name": "extraOptions",
+            "type": "bytes",
+            "internalType": "bytes"
+          }
+        ]
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "payable"
   },
   {
     "type": "function",
@@ -432,6 +624,64 @@
     "anonymous": false
   },
   {
+    "type": "event",
+    "name": "ReturnedToSource",
+    "inputs": [
+      {
+        "name": "guid",
+        "type": "bytes32",
+        "indexed": true,
+        "internalType": "bytes32"
+      },
+      {
+        "name": "payer",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "srcEid",
+        "type": "uint32",
+        "indexed": false,
+        "internalType": "uint32"
+      },
+      {
+        "name": "amountLD",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "NotPayerOrOperator",
+    "inputs": [
+      {
+        "name": "caller",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "NothingToReturn",
+    "inputs": [
+      {
+        "name": "guid",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "state",
+        "type": "uint8",
+        "internalType": "uint8"
+      }
+    ]
+  },
+  {
     "type": "error",
     "name": "OnlyAdapter",
     "inputs": [
@@ -456,6 +706,22 @@
     "type": "error",
     "name": "PivotDisabled",
     "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "ReturnDisabled",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "TraceMismatch",
+    "inputs": [
+      {
+        "name": "guid",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ]
   },
   {
     "type": "error",

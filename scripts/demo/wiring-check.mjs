@@ -6,6 +6,11 @@
 // send and receive libraries (explicitly set, not the default), the send and receive ULN config, the
 // executor, and the enforced options.
 //
+// It also DISCOVERS which composers are registered on each adapter (it replays the `ComposerSet` events from
+// `composersFromBlock`) and requires that set to EQUAL the announced list: a registered composer that is not
+// announced, or an announced one that is not registered, is a difference. A composer that is removed must leave
+// the announced list, not stay "registered" in the documentation.
+//
 // It reads the RAW values set by the application (getAppUlnConfig, executorConfigs), not the merged
 // "effective" value, because only the raw value tells a pinned setting from an inherited default.
 //
@@ -33,7 +38,7 @@ if (!wiring) { console.error('the tracker carries no "wiring" block'); process.e
 const ENDPOINT = tracker.lzEndpointV2;
 
 const CHAINS = [
-  { key: 'source', name: 'Ethereum Sepolia', rpc: opt('--rpc-sepolia', 'https://ethereum-sepolia-rpc.publicnode.com') },
+  { key: 'source', name: 'Ethereum Sepolia', rpc: opt('--rpc-sepolia', 'https://sepolia.gateway.tenderly.co') },
   { key: 'destination', name: 'Arbitrum Sepolia', rpc: opt('--rpc-arbitrum', 'https://sepolia-rollup.arbitrum.io/rpc') },
 ];
 
@@ -44,19 +49,28 @@ const SEL = {
   enforcedOptions: '0x5535d461', composers: '0x99b06189', eid: '0x416ecebf', owner: '0x8da5cb5b', delegates: '0x587cde1e',
 };
 
+const COMPOSER_SET = '0xf187b99b31c88b74fa21e883dccac0126dd2610a75243cf016e9d9530656bdaf'; // ComposerSet(address,bool)
+
 const word = (hex) => hex.replace(/^0x/, '').toLowerCase().padStart(64, '0');
 const num = (n) => BigInt(n).toString(16).padStart(64, '0');
 const lc = (a) => String(a).toLowerCase();
 const addrOf = (w) => '0x' + w.slice(24);
 
+// A public RPC answers "rate limit exceeded" under a burst of reads: retry with a growing pause, then fail loudly
+// (a silent RPC is not a pass). Any other error is not retried.
+async function rpcCall(rpc, method, params) {
+  for (let attempt = 1; ; attempt++) {
+    const res = await fetch(rpc, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }) });
+    const j = await res.json().catch(() => ({ error: { message: `HTTP ${res.status}` } }));
+    if (!j.error) return j.result;
+    if (attempt < 5 && /rate limit|429|too many|timeout/i.test(j.error.message)) { await new Promise((r) => setTimeout(r, 1000 * attempt)); continue; }
+    throw new Error(j.error.message);
+  }
+}
+
 async function ethCall(rpc, to, data) {
-  const res = await fetch(rpc, {
-    method: 'POST', headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'eth_call', params: [{ to, data }, 'latest'] }),
-  });
-  const j = await res.json();
-  if (j.error) throw new Error(`${to}: ${j.error.message}`);
-  return j.result.replace(/^0x/, '');
+  try { return (await rpcCall(rpc, 'eth_call', [{ to, data }, 'latest'])).replace(/^0x/, ''); }
+  catch (e) { throw new Error(`${to}: ${e.message}`); }
 }
 const words = (hex) => hex.match(/.{64}/g) ?? [];
 
@@ -83,6 +97,31 @@ function decodeBytes(hex) {
   return '0x' + hex.slice(128, 128 + len * 2);
 }
 const sameList = (a, b) => a.length === b.length && a.every((x, i) => lc(x) === lc(b[i]));
+
+
+// Replays `ComposerSet` from `from` to the head. Public RPCs cap the block range of a log query, so the range is
+// paged and halved on a range error; an RPC that has pruned the history is an ERROR, never a silent empty set.
+async function discoverComposers(rpc, adapter, from) {
+  const head = Number(BigInt(await rpcCall(rpc, 'eth_blockNumber', [])));
+  const events = [];
+  let page = 5_000_000;
+  for (let a = from; a <= head;) {
+    const b = Math.min(a + page - 1, head);
+    try {
+      const logs = await rpcCall(rpc, 'eth_getLogs', [{ address: adapter, topics: [COMPOSER_SET], fromBlock: '0x' + a.toString(16), toBlock: '0x' + b.toString(16) }]);
+      events.push(...logs);
+      a = b + 1;
+    } catch (e) {
+      if (/pruned|history/i.test(e.message)) throw new Error(`history unavailable on this RPC (${e.message}); pass an archive endpoint`);
+      if (page <= 2_000) throw e;
+      page = Math.floor(page / 4); // "range too large" or "too many results": smaller pages
+    }
+  }
+  events.sort((x, y) => Number(BigInt(x.blockNumber) - BigInt(y.blockNumber)) || Number(BigInt(x.logIndex) - BigInt(y.logIndex)));
+  const state = new Map();
+  for (const e of events) state.set('0x' + e.topics[1].slice(26).toLowerCase(), BigInt(e.data) === 1n);
+  return [...state].filter(([, on]) => on).map(([a]) => a).sort();
+}
 
 let bad = 0;
 const say = (ok, label) => { console.log(`  ${ok ? 'ok  ' : 'DIFF'}  ${label}`); if (!ok) bad++; };
@@ -123,7 +162,15 @@ for (const c of CHAINS) {
 
     for (const comp of p.composers || []) {
       const reg = BigInt('0x' + words(await ethCall(c.rpc, adapter, SEL.composers + word(comp)))[0]) === 1n;
-      say(reg, `composer ${comp} is registered on the arrival adapter`);
+      say(reg, `composer ${comp} is registered on the adapter`);
+    }
+    if (p.composersFromBlock !== undefined) {
+      const found = await discoverComposers(c.rpc, adapter, p.composersFromBlock);
+      const announced = (p.composers || []).map(lc).sort();
+      const extra = found.filter((x) => !announced.includes(x));
+      const missing = announced.filter((x) => !found.includes(x));
+      say(extra.length === 0 && missing.length === 0,
+        `registered composers (replayed from block ${p.composersFromBlock}) equal the announced list: ${found.length} registered, ${announced.length} announced${extra.length ? `; registered but NOT announced: ${extra.join(',')}` : ''}${missing.length ? `; announced but NOT registered: ${missing.join(',')}` : ''}`);
     }
 
     for (const [label, type] of [['SEND', 1], ['SEND_AND_CALL', 2]]) {

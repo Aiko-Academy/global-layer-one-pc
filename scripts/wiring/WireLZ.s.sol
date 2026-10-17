@@ -244,12 +244,15 @@ contract WireLZ is Script {
         }
     }
 
-    function _ulnEq(UlnConfig memory got, UlnConfig memory want, string memory label) internal {
-        bool eq = got.confirmations == want.confirmations && got.requiredDVNCount == want.requiredDVNCount
+    function _ulnSame(UlnConfig memory got, UlnConfig memory want) internal pure returns (bool) {
+        return got.confirmations == want.confirmations && got.requiredDVNCount == want.requiredDVNCount
             && got.optionalDVNCount == want.optionalDVNCount && got.optionalDVNThreshold == want.optionalDVNThreshold
             && keccak256(abi.encode(got.requiredDVNs)) == keccak256(abi.encode(want.requiredDVNs))
             && keccak256(abi.encode(got.optionalDVNs)) == keccak256(abi.encode(want.optionalDVNs));
-        _ok(eq, label);
+    }
+
+    function _ulnEq(UlnConfig memory got, UlnConfig memory want, string memory label) internal {
+        _ok(_ulnSame(got, want), label);
     }
 
     // ── set: only what differs ───────────────────────────────────────────────────────────────────────────────────
@@ -278,26 +281,8 @@ contract WireLZ is Script {
             console2.log("   set   setReceiveLibrary");
         }
 
-        // setConfig overwrites the application's raw value: safe to replay.
-        SetConfigParam[] memory sendP = new SetConfigParam[](2);
-        sendP[0] = SetConfigParam(
-            s.remoteEid, CONFIG_TYPE_EXECUTOR, abi.encode(ExecutorConfig(s.maxMessageSize, s.executor))
-        );
-        sendP[1] = SetConfigParam(s.remoteEid, CONFIG_TYPE_ULN, abi.encode(_ulnSpec(s)));
-        ep.setConfig(s.adapter, s.sendLib, sendP);
-        SetConfigParam[] memory recvP = new SetConfigParam[](1);
-        recvP[0] = SetConfigParam(s.remoteEid, CONFIG_TYPE_ULN, abi.encode(_ulnSpec(s)));
-        ep.setConfig(s.adapter, s.recvLib, recvP);
-        console2.log("   set   setConfig (send: executor + ULN ; receive: ULN)");
-
-        if (s.enforce) {
-            (uint256 g, uint256 c) = _gas();
-            EnforcedOptionParam[] memory eo = new EnforcedOptionParam[](s.compose ? 2 : 1);
-            eo[0] = EnforcedOptionParam(s.remoteEid, MSG_SEND, _optionsSpec(g, c, MSG_SEND));
-            if (s.compose) eo[1] = EnforcedOptionParam(s.remoteEid, MSG_SEND_AND_CALL, _optionsSpec(g, c, MSG_SEND_AND_CALL));
-            app.setEnforcedOptions(eo);
-            console2.log("   set   setEnforcedOptions");
-        }
+        _setConfig(s, ep);
+        if (s.enforce) _setOptions(s, app);
 
         vm.stopBroadcast();
 
@@ -306,5 +291,45 @@ contract WireLZ is Script {
         _checkAll(s);
         console2.log(bad == 0 ? "== state after set: conforming (simulated)" : "== state after set: DISCREPANCIES");
         require(bad == 0, "WireLZ: discrepancies after set");
+    }
+
+    // setConfig and setEnforcedOptions are only set when the RAW value differs from the specification (the same
+    // reads as `check()`): a `run()` replayed on a conforming wiring broadcasts nothing it does not need to.
+    function _setConfig(Spec memory s, ILzEndpointWiring ep) internal {
+        UlnConfig memory want = _ulnSpec(s);
+        (uint32 mms, address exec) = ILzSendLibRaw(s.sendLib).executorConfigs(s.adapter, s.remoteEid);
+        bool sendDiff = !_ulnSame(ILzSendLibRaw(s.sendLib).getAppUlnConfig(s.adapter, s.remoteEid), want)
+            || mms != s.maxMessageSize || exec != s.executor;
+        if (sendDiff) {
+            SetConfigParam[] memory sendP = new SetConfigParam[](2);
+            sendP[0] = SetConfigParam(
+                s.remoteEid, CONFIG_TYPE_EXECUTOR, abi.encode(ExecutorConfig(s.maxMessageSize, s.executor))
+            );
+            sendP[1] = SetConfigParam(s.remoteEid, CONFIG_TYPE_ULN, abi.encode(want));
+            ep.setConfig(s.adapter, s.sendLib, sendP);
+            console2.log("   set   setConfig send (executor + ULN)");
+        }
+        if (!_ulnSame(ILzReceiveLibRaw(s.recvLib).getAppUlnConfig(s.adapter, s.remoteEid), want)) {
+            SetConfigParam[] memory recvP = new SetConfigParam[](1);
+            recvP[0] = SetConfigParam(s.remoteEid, CONFIG_TYPE_ULN, abi.encode(want));
+            ep.setConfig(s.adapter, s.recvLib, recvP);
+            console2.log("   set   setConfig receive (ULN)");
+        }
+    }
+
+    function _setOptions(Spec memory s, IOAppWiring app) internal {
+        (uint256 g, uint256 c) = _gas();
+        bytes memory oSend = _optionsSpec(g, c, MSG_SEND);
+        bytes memory oCall = s.compose ? _optionsSpec(g, c, MSG_SEND_AND_CALL) : bytes("");
+        bool dSend = keccak256(app.enforcedOptions(s.remoteEid, MSG_SEND)) != keccak256(oSend);
+        bool dCall = s.compose && keccak256(app.enforcedOptions(s.remoteEid, MSG_SEND_AND_CALL)) != keccak256(oCall);
+        if (dSend || dCall) {
+            // both types are set together: setEnforcedOptions overwrites the value of each type it is given.
+            EnforcedOptionParam[] memory eo = new EnforcedOptionParam[](s.compose ? 2 : 1);
+            eo[0] = EnforcedOptionParam(s.remoteEid, MSG_SEND, oSend);
+            if (s.compose) eo[1] = EnforcedOptionParam(s.remoteEid, MSG_SEND_AND_CALL, oCall);
+            app.setEnforcedOptions(eo);
+            console2.log("   set   setEnforcedOptions");
+        }
     }
 }

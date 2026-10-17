@@ -33,7 +33,8 @@
       "wEURX_PolicyWrapper": "0x3D546A7Df13581d46F3cDF6d19A19241d23Dc54a",
       "SRC_ADAPTER_FX": "0x6f291E30A53366888F2A74673B7c4B7305c7D059",
       "AtelierIdentityGatedPolicy": "0xFAb1730f5569FdaEAeCef4b231a5A50F80944a63",
-      "TestSeal": "0x958286a08a640cFAB82736EB9e2b6e2a83E66Db1"
+      "TestSeal": "0x958286a08a640cFAB82736EB9e2b6e2a83E66Db1",
+      "RETURN_RECEIVER": "0x4e6d56d8f40B06fE3dF48B271328Cbed1aeBF983"
     }
   },
   "destination": {
@@ -47,13 +48,15 @@
       "SGDX_delivery_TokenRep": "0x48660bD73791264D1cED1b3451e313a85d58c15b",
       "wSGDX_delivery_PolicyWrapper": "0x50Ac4aa1A067DfB22f56F61E04AC048d6Ea1f2dE",
       "pool_EURX_SGDX": "0x224a6c394d6B5307964E18E6A43Bb3b7984fe9AD",
-      "COMPOSER_ARBITRUM_FX": "0xd10E2bE83F8dAEb25d568E8f850Ec95222DE5511",
+      "COMPOSER_ARBITRUM_FX": "0xe3A33643Eef095FB9894b2A7C600C5005cB392fa",
       "AtelierIdentityGatedPolicy": "0x9DA5cC7BCC0C0236d46004bF4e0952C09252bf20",
       "TestSeal": "0xFAb1730f5569FdaEAeCef4b231a5A50F80944a63",
       "COMPOSER_ARBITRUM_FX_single_route": "0x6eAA1d03fb6D1E9AAC3524a88eB6BB34Beb275DF",
       "USDX_pivot_TokenRep": "0xb8d6E96387e099f91CD972d9fDEb16F804A45ac0",
       "pool_EURX_USDX": "0x179F7c1d4B351303f487A86340B0911ACd41A0c3",
-      "pool_SGDX_USDX": "0x3D7C07FA75E7FdD5d9b019Ad45102e0f11B5D9d9"
+      "pool_SGDX_USDX": "0x3D7C07FA75E7FdD5d9b019Ad45102e0f11B5D9d9",
+      "COMPOSER_ARBITRUM_FX_two_routes_v2": "0xd10E2bE83F8dAEb25d568E8f850Ec95222DE5511",
+      "COMPOSER_ARBITRUM_FX_first_composer": "0xB017626c462D8e81e6512Ead7F2b30C3A1A2Fb92"
     },
     "uniswapV3Canonical": {
       "UniswapV3Factory": "0x248AB79Bbb9bC29bB72f7Cd42F17e054Fc40188e",
@@ -161,6 +164,51 @@
           "what": "atomic lzCompose on route 1: swap 50 EURX to USDX to 73.481601 SGDX through the two pivot pools, then gated delivery to BANK SG1 (vLEI verified); the composer keeps nothing"
         }
       ]
+    },
+    "returned": {
+      "outcome": "returned",
+      "returned_amount_eurx": "50",
+      "reason": "beneficiary BANK SG2 not identified on Arbitrum: the gated delivery is refused, the 50 wEURX stay with the composer, are recorded by guid with the original payer, then sent back through the bridge: burned at arrival (the reserve gets its EURX back), the source lock is released and the return receiver hands the wEURX back to the payer",
+      "parties": {
+        "originatingFI": {
+          "name": "BANK FR",
+          "address": "0x7C0984484391D6cD7bFc68d12D1fD3c48f1BbB38",
+          "role": "pays EUR, source conforming; made whole after the refusal"
+        },
+        "beneficiaryFI": {
+          "name": "BANK SG2",
+          "address": "0x96495854Da659fa8e75781bbd1D4767721eff401",
+          "role": "attempts to receive SGD, not identified on Arbitrum"
+        }
+      },
+      "legs": [
+        {
+          "chainId": 11155111,
+          "phase": "lock",
+          "tx": "0x7313279d1c3c3a6e7faabd7625239c99fa16750ab8933a9c9217b06702ed6362",
+          "what": "50 wEURX locked at source by BANK FR; beneficiary BANK SG2 is not identified"
+        },
+        {
+          "chainId": 421614,
+          "phase": "refuse",
+          "tx": "0x731212e06c7ddd6d3e15e38663a7ddc7dbcbdecb4f0c0530e70c8403c94a5527",
+          "what": "gated delivery refused; the swap is rolled back; the refusal is recorded by guid with the original payer; the receipt carries zero token transfers"
+        },
+        {
+          "chainId": 421614,
+          "phase": "return",
+          "tx": "0x88773388fc5689676d43577a8ea44598308daf6ac33783d3c0b78b9a75d0b1ae",
+          "what": "returnToSource by the operator: the composer's 50 wEURX go to the adapter and are burned, the reserve gets 50 EURX back, the adapter trace is consumed"
+        },
+        {
+          "chainId": 11155111,
+          "phase": "credit-payer",
+          "tx": "0x5dd25608c4c518f8e2330cb4178cfb08b7f690372b642d3bccd61f9bcc0f3851",
+          "what": "the return receiver hands 50 wEURX back to BANK FR by a gated transfer; the source lock was released by the LayerZero delivery"
+        }
+      ],
+      "state_read_on": "2026-10-17T13:05:15Z",
+      "note": "Not recoverable by this path: two older composers (0xB017...: 50 wEURX, 0x6eAA...: 100 wEURX) hold wEURX recorded before the return path existed; their code has no approve or transfer, so that stock stays in place, backed by the wrapper's EURX."
     }
   },
   "earlier_passes_default_wiring": {
@@ -199,7 +247,11 @@
       "enforcedOptions": {
         "SEND": "0x0003010011010000000000000000000000000007a120",
         "SEND_AND_CALL": "0x0003010011010000000000000000000000000007a1200100130300000000000000000000000000000044aa20"
-      }
+      },
+      "composers": [
+        "0x4e6d56d8f40B06fE3dF48B271328Cbed1aeBF983"
+      ],
+      "composersFromBlock": 11800000
     },
     "destination": {
       "chainId": 421614,
@@ -224,9 +276,12 @@
         "SEND_AND_CALL": "0x"
       },
       "composers": [
+        "0xe3A33643Eef095FB9894b2A7C600C5005cB392fa",
         "0xd10E2bE83F8dAEb25d568E8f850Ec95222DE5511",
-        "0x6eAA1d03fb6D1E9AAC3524a88eB6BB34Beb275DF"
-      ]
+        "0x6eAA1d03fb6D1E9AAC3524a88eB6BB34Beb275DF",
+        "0xB017626c462D8e81e6512Ead7F2b30C3A1A2Fb92"
+      ],
+      "composersFromBlock": 319000000
     }
   },
   "routes": {

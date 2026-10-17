@@ -1,7 +1,7 @@
 {
   "source": "Aiko Academy, Programmable Compliance toolkit",
-  "source_commit": "92743f3f37a7660cb4a3250b077af54e6ea95712",
-  "ecrit_le": "2026-10-16",
+  "source_commit": "2a01027",
+  "ecrit_le": "2026-10-17",
   "note": "Surface d exposition redistribuable. Principe : ABI et interfaces reproductibles depuis la source par empreinte ; traceurs lus sur la chaine ; licences AGPL-3.0, GPL-3.0 ou MIT seulement ; aucun artefact BUSL, LZBL ni UNLICENSED ; aucune trace d outil. ABI verifiees contre le bytecode deploye par le RUNBOOK (etape en ligne, RPC).",
   "licences_autorisees": [
     "AGPL-3.0",
@@ -11,7 +11,7 @@
   ],
   "fichiers": {
     "abi/ArrivalComposerFX.json": {
-      "sha256": "5fc543af8776d7b39126a21ce6502b2d319aea052bb639b76a3349effb2b7409",
+      "sha256": "6bb1b41f958b5311ee9f67c6ee09f5a3436ca00c82cf9883c6e0db2fd7028dad",
       "licence": "MIT"
     },
     "abi/AttestationValidatorPolicy.json": {
@@ -74,6 +74,10 @@
       "sha256": "649c4b082ab41fa15284bc13caa76f7d77f413e8fa0205ddfca20bc729788a24",
       "licence": "AGPL-3.0"
     },
+    "abi/ReturnReceiver.json": {
+      "sha256": "df5022a411797de2c435425a8f67f79a9d5d6b232c107f743261c4f801716e12",
+      "licence": "AGPL-3.0"
+    },
     "abi/SanctionsGroth16Verifier.json": {
       "sha256": "a0fa198ddc3a5ff8960114bbf571baa7af3b638c216ab3fac1445a6df3c86a8b",
       "licence": "GPL-3.0"
@@ -99,7 +103,7 @@
       "licence": "AGPL-3.0"
     },
     "interfaces/IComplianceOFTAdapter.sol": {
-      "sha256": "e22bb31ad9af61cac7dd2db633eed3fe5de555f622632aa6f10fd9afd79a41c9",
+      "sha256": "b2e23c9c4a0f067ba1a59755bb74b26c9b5b92e5f5806e0b00b159d50aa0d1b9",
       "licence": "MIT"
     },
     "interfaces/IPolicy.sol": {
@@ -171,7 +175,7 @@
       "licence": "data"
     },
     "deployments/fx-corridor.json": {
-      "sha256": "4325484292cd86084eb09d74012421e5b289055806a5ab1434b3e1fef5f5d708",
+      "sha256": "8230a548ed9c00dfa8a094dc1b43f5cdf1f91c1e66c0333c778992453cd57a69",
       "licence": "data"
     }
   }

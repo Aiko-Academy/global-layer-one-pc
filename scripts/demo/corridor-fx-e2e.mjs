@@ -89,6 +89,26 @@ function assertions(p, l, rcpt) {
     const adapter = (T.SRC_ADAPTER_FX || '').toLowerCase();
     const hit = tr.find((g) => g.address.toLowerCase() === w && g.topics[1] === pad(fi) && g.topics[2] === pad(adapter));
     out.push([!!hit, hit ? `wEURX moved from the originating FI to the source adapter: ${Number(BigInt(hit.data)) / 1e18}` : 'no wEURX transfer from the originating FI to the source adapter']);
+  } else if (p.outcome === 'returned' && l.phase === 'return') {
+    // Arrival chain, the return of a refused amount: the composer's wEURX goes to the adapter, is BURNED there, and the
+    // reserve gets the same amount of EURX back. Every address comes from the tracker; the amount from the pass.
+    const w = (D.wEURX_reception_PolicyWrapper || '').toLowerCase();
+    const eurx = (D.EURX_reception_TokenRep || '').toLowerCase();
+    const comp = pad(D.COMPOSER_ARBITRUM_FX || '');
+    const adapter = pad(D.RECV_ADAPTER_EUR || '');
+    const want = toWei(p.returned_amount_eurx);
+    const moved = tr.find((g) => g.address.toLowerCase() === w && g.topics[1] === comp && g.topics[2] === adapter && BigInt(g.data) === want);
+    out.push([!!moved, moved ? `wEURX left the composer for the adapter: exactly ${p.returned_amount_eurx}` : `no wEURX transfer of exactly ${p.returned_amount_eurx} from the composer to the adapter`]);
+    const burnt = tr.find((g) => g.address.toLowerCase() === w && g.topics[1] === adapter && g.topics[2] === pad('0x0') && BigInt(g.data) === want);
+    out.push([!!burnt, burnt ? 'the same wEURX is burned (transfer to the zero address): no wrapped value remains in circulation' : 'no burn of the returned wEURX']);
+    const back = tr.find((g) => g.address.toLowerCase() === eurx && g.topics[1] === pad(D.wEURX_reception_PolicyWrapper || '') && g.topics[2] === adapter && BigInt(g.data) === want);
+    out.push([!!back, back ? 'the same amount of EURX returns from the wrapper to the adapter reserve' : 'no EURX transfer back to the adapter reserve']);
+  } else if (p.outcome === 'returned' && l.phase === 'credit-payer') {
+    // Source chain: the receiver hands the wEURX back to the ORIGINAL payer, exactly the amount that was refused.
+    const w = (T.wEURX_PolicyWrapper || '').toLowerCase();
+    const want = toWei(p.returned_amount_eurx);
+    const hit = tr.find((g) => g.address.toLowerCase() === w && g.topics[1] === pad(T.RETURN_RECEIVER || '') && g.topics[2] === pad(fi) && BigInt(g.data) === want);
+    out.push([!!hit, hit ? `wEURX returned to the originating FI: exactly ${p.returned_amount_eurx} (the payer is made whole)` : `no wEURX transfer of exactly ${p.returned_amount_eurx} from the return receiver to the originating FI`]);
   } else if (p.outcome === 'settled') {
     const w = (D.wSGDX_delivery_PolicyWrapper || '').toLowerCase();
     const want = toWei(p.beneficiary_delta_sgdx);
@@ -112,7 +132,7 @@ function assertions(p, l, rcpt) {
       const touched = tr.some((g) => g.topics[1] === pad(direct) || g.topics[2] === pad(direct));
       out.push([!touched, !touched ? 'the direct pool did not move on route 1' : 'the direct pool moved on route 1']);
     }
-  } else {
+  } else {  // refused pass, or the refusal leg of a returned pass
     out.push([tr.length === 0, tr.length === 0 ? `0 token Transfer events: pool and beneficiary cannot have moved (${rcpt.logs.length} other events)` : `${tr.length} token Transfer events found in a refusal`]);
   }
   return out;
@@ -163,7 +183,7 @@ async function pass(title, p) {
   if (p.rate_sgd_per_eur) console.log(`  applied rate: 1 EUR = ${p.rate_sgd_per_eur} SGD`);
   if (p.quote_sgd_per_eur) console.log(`  quote at send: 1 EUR = ${p.quote_sgd_per_eur} SGD (not applied, refused)`);
   if (p.reason) console.log(`  reason: ${p.reason}`);
-  console.log(`  beneficiary delta: +${p.beneficiary_delta_sgdx} SGDX`);
+  console.log(`  beneficiary delta: +${p.beneficiary_delta_sgdx ?? 0} SGDX`);
   const states = [];
   for (const l of p.legs) states.push(await leg(l, p));
   return states;
@@ -183,12 +203,14 @@ const states = [
   ...(await pass('conforming pass', dp.conforming)),
   ...(await pass('refused pass', dp.refused)),
   ...(dp.pivot ? await pass('pivot pass (route 1)', dp.pivot) : []),
+  ...(dp.returned ? await pass('returned pass (refusal, then funds returned to the payer)', dp.returned) : []),
 ];
 const count = (s) => states.filter((x) => x === s).length;
 
 console.log('\n-- summary --');
 console.log('  conforming: beneficiary received SGDX, FX change executed at the arrival pivot, gated delivery passed');
 console.log('  refused   : beneficiary received 0 SGDX, no FX change, value kept in transit; the gate held');
+if (dp.returned) console.log('  returned  : the refused value went back through the bridge, the reserve was restored and the payer was made whole');
 console.log(`  receipts  : ${count('ok')} confirmed, ${count('bad')} not confirmed by the chain, ${count('down')} unverified (RPC unreachable)`);
 
 // Exit non-zero only when the chain fails to confirm a transaction the surface claims (a real defect
