@@ -82,6 +82,18 @@ single-route composer (`COMPOSER_ARBITRUM_FX_single_route`), which stays registe
 `scripts/demo/corridor-fx-e2e.mjs` replays the route 1 pass (`demonstration_passes.pivot`) and checks that both
 pivot pools moved, that the direct pool did not, and that the composer never held USDX.
 
+To see which route the agent would pick right now, read-only:
+
+```
+node scripts/demo/route-agent.mjs [--amount 50] [--tol-bps 30]
+```
+
+It checks on the chain that the three tokens of the paths and the three pools are base tokens (it refuses
+if one is a wrapper), quotes both routes with the QuoterV2, and prints the choice with its reason, then a
+`GL1_FX_ROUTE={...}` line (route, converted amount, floor `minOut`). At the calibrated state the direct
+route wins by a fraction of a basis point: both routes start from the same USD-pivot reference, and the
+pivot pays one more fee. The choice only flips when a pool is unbalanced.
+
 ### Checking the pinned LayerZero pathway
 
 Since 2026-10-16 the pathway of the FX corridor is set by the application on both chains: explicit send and

@@ -38,7 +38,7 @@ interface or tracker for it is part of this surface.
 | `references/` | upstream projects credited by reference, under their own licence |
 | `MANIFEST.json` | per-file sha256 and licence; the surface is exactly this set |
 | `scripts/ci/` | offline delivery gates |
-| `scripts/demo/` | read-only replays on the public test networks (`corridor-fx-e2e.mjs`, `wiring-check.mjs`) |
+| `scripts/demo/` | read-only replays on the public test networks (`corridor-fx-e2e.mjs`, `wiring-check.mjs`, `route-agent.mjs`) |
 | `scripts/wiring/` | complete LayerZero wiring of a corridor adapter, and its read-back (`WireLZ.s.sol`) |
 
 ## How to verify
